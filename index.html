@@ -13,19 +13,21 @@
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --ground:#EEF2F0; --surface:#FFFFFF; --surface-2:#F5F8F7; --ink:#0E1B2C; --ink-2:#4A5A6C; --line:#D5DEDB;
-  --court:#123A6B; --court-2:#1C5496; --on-court:#FFFFFF; --ball:#D6F03C; --ball-ink:#1B2400;
-  --win:#1E7A46; --warn:#B45309; --danger:#B42318; --focus:#1C5496;
-  --radius:14px; --shadow:0 1px 2px rgba(14,27,44,.06),0 6px 20px rgba(14,27,44,.06);
+  --ground:#F1F4F3; --surface:#FFFFFF; --surface-2:#F4F7F6; --ink:#0C1F1E; --ink-2:#4B5F5D; --line:#D6E0DE;
+  --court:#00534E; --court-2:#00534E; --on-court:#FFFFFF; --ball:#E30613; --ball-ink:#FFFFFF; --logo-ink:#00534E; --logo-red:#FF0000;
+  --win:#00534E; --warn:#B45309; --danger:#B42318; --focus:#00534E;
+  --radius:14px; --shadow:0 1px 2px rgba(12,31,30,.06),0 6px 20px rgba(12,31,30,.06);
   color-scheme:light;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --ground:#08111D; --surface:#101C2D; --surface-2:#15243A; --ink:#E7EEF6; --ink-2:#9AAABD; --line:#22344D;
-  --court:#0F2E55; --court-2:#2B6CC0; --win:#4ADE80; --warn:#FBBF24; --danger:#F87171; --focus:#7FB2F0;
+  --ground:#061110; --surface:#0D1D1C; --surface-2:#122826; --ink:#E6F0EE; --ink-2:#93AAA7; --line:#1E3835;
+  --court:#0B5F59; --court-2:#118278; --ball:#FF2A2A; --ball-ink:#FFFFFF; --logo-ink:#E6F0EE; --logo-red:#FF1F1F;
+  --win:#4FD1B5; --warn:#FBBF24; --danger:#F87171; --focus:#4FD1B5;
   --shadow:0 1px 2px rgba(0,0,0,.3); color-scheme:dark;}}
 :root[data-theme="dark"]{
-  --ground:#08111D; --surface:#101C2D; --surface-2:#15243A; --ink:#E7EEF6; --ink-2:#9AAABD; --line:#22344D;
-  --court:#0F2E55; --court-2:#2B6CC0; --win:#4ADE80; --warn:#FBBF24; --danger:#F87171; --focus:#7FB2F0;
+  --ground:#061110; --surface:#0D1D1C; --surface-2:#122826; --ink:#E6F0EE; --ink-2:#93AAA7; --line:#1E3835;
+  --court:#0B5F59; --court-2:#118278; --ball:#FF2A2A; --ball-ink:#FFFFFF; --logo-ink:#E6F0EE; --logo-red:#FF1F1F;
+  --win:#4FD1B5; --warn:#FBBF24; --danger:#F87171; --focus:#4FD1B5;
   --shadow:0 1px 2px rgba(0,0,0,.3); color-scheme:dark;}
 *{box-sizing:border-box}
 html,body{margin:0}
@@ -37,19 +39,21 @@ button,input,select,textarea{font:inherit;color:inherit}
 .num{font-variant-numeric:tabular-nums}
 
 /* top bar */
-.bar{background:var(--court);color:var(--on-court);padding:calc(env(safe-area-inset-top,0px) + 12px) 16px 12px;position:sticky;top:0;z-index:20}
-.bar-in{max-width:760px;margin:0 auto;display:flex;align-items:center;gap:12px}
-.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit;min-width:0}
-.brand-mark{width:28px;height:28px;border-radius:50%;background:var(--ball);flex:none;position:relative;overflow:hidden}
-.brand-mark::before,.brand-mark::after{content:"";position:absolute;width:28px;height:28px;border:2px solid rgba(255,255,255,.85);border-radius:50%;top:0}
-.brand-mark::before{left:-17px}.brand-mark::after{right:-17px}
-.brand-txt{display:flex;flex-direction:column;line-height:1.05;min-width:0}
-.brand-club{font:600 11px/1 "Barlow",sans-serif;letter-spacing:.14em;text-transform:uppercase;opacity:.75}
+.bar{background:var(--surface);color:var(--ink);border-bottom:3px solid var(--logo-red);padding:calc(env(safe-area-inset-top,0px) + 8px) 16px 8px;position:sticky;top:0;z-index:20}
+.bar-in{max-width:980px;margin:0 auto;display:flex;align-items:center;gap:14px}
+.brand{display:flex;align-items:center;flex:none;text-decoration:none}
+.logo{height:54px;width:auto;display:block}
+.logo .lk{fill:var(--logo-ink)} .logo .lr{fill:var(--logo-red)}
+.bar-title{min-width:0;display:flex;flex-direction:column;border-left:1px solid var(--line);padding-left:14px}
+.bar-title small{font:600 10.5px/1.2 "Barlow",sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2)}
 .brand-name{font:700 21px/1.1 "Barlow Condensed",sans-serif;letter-spacing:.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .bar .spacer{flex:1}
-.pill-code{font:600 14px/1 "Barlow Condensed",sans-serif;letter-spacing:.12em;background:rgba(255,255,255,.12);padding:7px 10px;border-radius:999px;white-space:nowrap}
+.share-btn{flex:none;border:0;background:var(--court-2);color:#fff;border-radius:999px;padding:9px 14px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px;min-height:40px}
+.share-btn svg{width:16px;height:16px}
+.pill-code{font:600 14px/1 "Barlow Condensed",sans-serif;letter-spacing:.12em;background:var(--surface-2);padding:7px 10px;border-radius:999px;white-space:nowrap}
+@media (max-width:420px){.logo{height:44px}.bar-title{padding-left:10px}.brand-name{font-size:19px}.share-btn span{display:none}.share-btn{padding:9px 11px}}
 
-main{max-width:760px;margin:0 auto;padding:16px 16px 120px}
+main{max-width:980px;margin:0 auto;padding:16px 16px 120px}
 h1,h2,h3{font-family:"Barlow Condensed","Arial Narrow",sans-serif;margin:0;text-wrap:balance;letter-spacing:.005em}
 h2{font-size:24px;font-weight:700}
 h3{font-size:18px;font-weight:600}
@@ -84,7 +88,7 @@ textarea.in{min-height:190px;resize:vertical;line-height:1.5}
 .chip[aria-pressed="true"]{background:var(--court-2);color:#fff;border-color:var(--court-2)}
 
 /* tabs */
-.tabs{display:flex;gap:4px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:4px;margin-bottom:14px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 64px);z-index:10}
+.tabs{display:flex;gap:4px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:4px;margin-bottom:16px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 72px);z-index:10}
 .tabs button{flex:1;border:0;background:transparent;padding:10px 6px;border-radius:9px;font-weight:600;cursor:pointer;min-height:40px}
 .tabs button[aria-selected="true"]{background:var(--court);color:#fff}
 
@@ -110,8 +114,23 @@ textarea.in{min-height:190px;resize:vertical;line-height:1.5}
 .sc.win{color:var(--win)}
 .sc.empty{color:var(--ink-2);opacity:.45}
 .enter{font-size:13px;font-weight:600;color:var(--court-2);white-space:nowrap}
-.me{background:var(--ball);color:var(--ball-ink);border-radius:6px;padding:0 5px;margin:0 -5px}
+.me{background:var(--ball);color:var(--ball-ink);border-radius:6px;padding:1px 6px}
 .bye{padding:10px 14px;border:1px dashed var(--line);border-radius:12px;color:var(--ink-2);font-size:14px}
+
+
+/* rounds list */
+.rounds-list{display:flex;flex-direction:column;gap:22px}
+.round{display:flex;flex-direction:column;gap:10px;scroll-margin-top:calc(env(safe-area-inset-top,0px) + 136px)}
+.round-head{display:flex;align-items:center;gap:10px}
+.round-head h2{font-size:22px}
+.round:not(.current) .round-head h2{color:var(--ink-2)}
+.st{font:600 11px/1 "Barlow",sans-serif;letter-spacing:.1em;text-transform:uppercase;padding:5px 8px;border-radius:999px;background:var(--surface-2);color:var(--ink-2);border:1px solid var(--line)}
+.st.done{color:var(--win)}
+.st.now{background:var(--ball);color:var(--ball-ink);border-color:var(--ball)}
+.round-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:10px}
+@media (max-width:420px){.round-grid{grid-template-columns:1fr}}
+.round.current .match{border-color:color-mix(in srgb,var(--court-2) 45%,var(--line))}
+.jump{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:15;border:0;background:var(--ink);color:var(--ground);border-radius:999px;padding:10px 16px;font-weight:600;cursor:pointer;box-shadow:var(--shadow)}
 
 /* table */
 .tbl-wrap{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius)}
@@ -160,12 +179,10 @@ th:first-child,td:first-child{padding-left:12px}
 <body>
 <header class="bar">
   <div class="bar-in">
-    <a class="brand" href="./" id="brandLink">
-      <span class="brand-mark" aria-hidden="true"></span>
-      <span class="brand-txt"><span class="brand-club">Padel Klatovy</span><span class="brand-name" id="barTitle">Turnaje</span></span>
-    </a>
+    <a class="brand" href="./" aria-label="Padel Klatovy – turnaje"><svg class="logo" xmlns="http://www.w3.org/2000/svg" viewBox="214 346 166 150" role="img" aria-label="Padel Klatovy"> <path fill-rule="nonzero" class="lk" d="M 268.40 454.41 L 257.78 454.41 L 253.00 478.32 L 261.06 478.32 L 262.22 472.44 L 266.35 472.44 C 273.69 472.44 278.44 468.38 278.44 462.33 C 278.44 457.35 274.82 454.41 268.40 454.41 Z M 266.76 466.23 L 263.45 466.23 L 264.58 460.62 L 267.28 460.62 C 269.12 460.62 270.28 461.34 270.28 463.05 C 270.28 465.07 268.98 466.23 266.76 466.23 "/> <path fill-rule="nonzero" class="lk" d="M 296.58 478.32 L 304.60 478.32 L 298.93 454.41 L 291.01 454.41 L 275.78 478.32 L 284.28 478.32 L 286.67 474.15 L 295.79 474.15 Z M 289.99 468.34 L 293.50 462.23 L 294.67 468.34 Z M 289.99 468.34 "/> <path fill-rule="nonzero" class="lk" d="M 305.90 478.32 L 318.71 478.32 C 327.42 478.32 333.67 472.99 333.67 464.55 C 333.67 458.27 329.02 454.41 321.48 454.41 L 310.68 454.41 Z M 315.23 472.03 L 317.48 460.69 L 320.55 460.69 C 323.80 460.69 325.54 462.26 325.54 465.03 C 325.54 468.96 323.25 472.03 318.98 472.03 Z M 315.23 472.03 "/> <path fill-rule="nonzero" class="lk" d="M 357.10 460.49 L 358.32 454.41 L 338.89 454.41 L 334.11 478.32 L 353.99 478.32 L 355.22 472.24 L 343.23 472.24 L 343.84 469.09 L 353.99 469.09 L 355.15 463.29 L 345.04 463.29 L 345.58 460.49 Z M 357.10 460.49 "/> <path fill-rule="nonzero" class="lk" d="M 357.10 478.32 L 375.95 478.32 L 377.21 472.07 L 366.42 472.07 L 369.94 454.41 L 361.88 454.41 Z M 357.10 478.32 "/> <path fill-rule="nonzero" class="lr" d="M 260.02 485.12 L 257.37 485.12 L 253.78 488.37 L 254.42 485.12 L 252.21 485.12 L 250.62 493.08 L 252.83 493.08 L 253.22 491.15 L 254.25 490.21 L 256.08 493.08 L 258.60 493.08 L 255.93 488.78 Z M 260.02 485.12 "/> <path fill-rule="nonzero" class="lr" d="M 259.17 493.08 L 265.22 493.08 L 265.58 491.30 L 261.78 491.30 L 263.01 485.12 L 260.76 485.12 Z M 259.17 493.08 "/> <path fill-rule="nonzero" class="lr" d="M 272.25 493.08 L 274.49 493.08 L 272.57 485.12 L 270.35 485.12 L 265.25 493.08 L 267.62 493.08 L 268.54 491.53 L 271.93 491.53 Z M 269.53 489.87 L 271.06 487.29 L 271.59 489.87 Z M 269.53 489.87 "/> <path fill-rule="nonzero" class="lr" d="M 276.42 493.08 L 278.68 493.08 L 279.92 486.91 L 282.35 486.91 L 282.72 485.12 L 275.58 485.12 L 275.22 486.91 L 277.67 486.91 Z M 276.42 493.08 "/> <path fill-rule="nonzero" class="lr" d="M 286.15 493.24 C 289.08 493.24 291.12 491.23 291.12 488.46 C 291.12 486.40 289.61 484.96 287.16 484.96 C 284.24 484.96 282.19 486.97 282.19 489.74 C 282.19 491.80 283.71 493.24 286.15 493.24 Z M 286.35 491.37 C 285.15 491.37 284.47 490.66 284.47 489.60 C 284.47 488.10 285.41 486.82 286.97 486.82 C 288.17 486.82 288.85 487.54 288.85 488.60 C 288.85 490.10 287.91 491.37 286.35 491.37 "/> <path fill-rule="nonzero" class="lr" d="M 298.54 485.12 L 295.29 490.29 L 294.15 485.12 L 291.84 485.12 L 293.65 493.08 L 295.87 493.08 L 300.86 485.12 Z M 298.54 485.12 "/> <path fill-rule="nonzero" class="lr" d="M 308.51 485.12 L 306.22 485.12 L 303.67 488.29 L 302.42 485.12 L 300.16 485.12 L 302.18 490.20 L 301.61 493.08 L 303.86 493.08 L 304.42 490.26 Z M 308.51 485.12 "/> <path fill-rule="evenodd" class="lr" d="M 296.16 435.52 C 298.17 434.85 300 434.16 301.71 433.39 C 303.43 432.61 305.04 431.76 306.64 430.77 C 308.23 429.79 309.82 428.67 311.35 427.45 C 312.87 426.24 314.33 424.93 315.67 423.57 C 317.02 422.21 318.26 420.80 319.39 419.33 C 320.51 417.87 321.54 416.35 322.47 414.78 C 323.41 413.20 324.25 411.58 325.01 409.87 C 325.77 408.17 326.46 406.39 327.09 404.51 C 327.73 402.59 328.30 400.57 328.79 398.51 C 329.25 396.55 329.63 394.56 329.89 392.63 C 330.16 390.65 330.30 388.73 330.34 386.82 C 330.39 384.91 330.32 383.00 330.16 381.05 C 329.99 378.99 329.71 376.88 329.30 374.85 C 328.94 373.04 328.47 371.28 327.87 369.64 C 327.23 367.92 326.45 366.34 325.53 364.87 C 324.60 363.41 323.54 362.05 322.34 360.78 C 321.14 359.5 319.81 358.30 318.35 357.19 C 316.91 356.09 315.34 355.08 313.67 354.18 C 312.01 353.28 310.24 352.49 308.42 351.81 C 306.56 351.12 304.64 350.55 302.72 350.10 C 300.81 349.66 298.90 349.35 296.17 349.12 C 293.42 348.88 289.86 348.73 284.68 348.60 C 274.34 348.47 257.41 348.69 240.55 348.58 L 216.93 482.10 L 251.72 446.19 C 258.33 439.79 258.33 439.78 259.73 439.90 C 261.02 440.01 263.58 440.22 267.58 440.14 C 269.73 440.10 272.30 439.97 275.03 439.74 C 277.37 439.53 279.82 439.26 282.18 438.89 C 284.64 438.50 287.01 438.02 289.27 437.48 C 291.73 436.89 294.04 436.22 296.16 435.52 "/> <path fill-rule="evenodd" fill="#fff" d="M 259.14 371.73 C 260.37 371.73 261.31 372.73 261.24 373.96 C 261.17 375.19 260.12 376.19 258.89 376.19 C 257.66 376.19 256.71 375.19 256.78 373.96 C 256.85 372.73 257.90 371.73 259.14 371.73 "/> <path fill-rule="evenodd" fill="#fff" d="M 258.14 377.60 C 259.37 377.60 260.31 378.60 260.25 379.83 C 260.17 381.07 259.12 382.07 257.89 382.07 C 256.66 382.07 255.71 381.07 255.78 379.83 C 255.85 378.60 256.91 377.60 258.14 377.60 "/> <path fill-rule="evenodd" fill="#fff" d="M 257.14 383.48 C 258.37 383.48 259.31 384.48 259.25 385.71 C 259.18 386.94 258.12 387.94 256.89 387.94 C 255.66 387.94 254.72 386.94 254.78 385.71 C 254.85 384.48 255.91 383.48 257.14 383.48 "/> <path fill-rule="evenodd" fill="#fff" d="M 256.14 389.35 C 257.37 389.35 258.31 390.35 258.25 391.58 C 258.18 392.82 257.12 393.81 255.89 393.81 C 254.66 393.81 253.72 392.82 253.78 391.58 C 253.85 390.35 254.91 389.35 256.14 389.35 "/> <path fill-rule="evenodd" fill="#fff" d="M 255.14 395.23 C 256.37 395.23 257.32 396.23 257.25 397.46 C 257.18 398.69 256.12 399.69 254.89 399.69 C 253.66 399.69 252.72 398.69 252.78 397.46 C 252.85 396.23 253.91 395.23 255.14 395.23 "/> <path fill-rule="evenodd" fill="#fff" d="M 254.14 401.10 C 255.37 401.10 256.32 402.10 256.25 403.33 C 256.18 404.56 255.13 405.56 253.89 405.56 C 252.66 405.56 251.72 404.56 251.79 403.33 C 251.85 402.10 252.91 401.10 254.14 401.10 "/> <path fill-rule="evenodd" fill="#fff" d="M 253.14 406.97 C 254.37 406.97 255.32 407.97 255.25 409.20 C 255.18 410.44 254.13 411.43 252.90 411.43 C 251.66 411.43 250.72 410.44 250.79 409.20 C 250.85 407.97 251.91 406.97 253.14 406.97 "/> <path fill-rule="evenodd" fill="#fff" d="M 252.14 412.85 C 253.37 412.85 254.32 413.85 254.25 415.08 C 254.18 416.31 253.13 417.31 251.90 417.31 C 250.67 417.31 249.72 416.31 249.79 415.08 C 249.85 413.85 250.91 412.85 252.14 412.85 "/> <path fill-rule="evenodd" fill="#fff" d="M 267.78 365.86 C 269.01 365.86 269.95 366.85 269.89 368.09 C 269.82 369.32 268.76 370.32 267.53 370.32 C 266.30 370.32 265.36 369.32 265.42 368.09 C 265.49 366.85 266.55 365.86 267.78 365.86 "/> <path fill-rule="evenodd" fill="#fff" d="M 266.78 371.73 C 268.01 371.73 268.95 372.73 268.89 373.96 C 268.82 375.19 267.76 376.19 266.53 376.19 C 265.30 376.19 264.36 375.19 264.42 373.96 C 264.49 372.73 265.55 371.73 266.78 371.73 "/> <path fill-rule="evenodd" fill="#fff" d="M 265.78 377.60 C 267.01 377.60 267.96 378.60 267.89 379.83 C 267.82 381.07 266.77 382.07 265.53 382.07 C 264.30 382.07 263.36 381.07 263.42 379.83 C 263.5 378.60 264.55 377.60 265.78 377.60 "/> <path fill-rule="evenodd" fill="#fff" d="M 264.78 383.48 C 266.01 383.48 266.96 384.48 266.89 385.71 C 266.82 386.94 265.77 387.94 264.53 387.94 C 263.30 387.94 262.36 386.94 262.43 385.71 C 262.5 384.48 263.55 383.48 264.78 383.48 "/> <path fill-rule="evenodd" fill="#fff" d="M 263.78 389.35 C 265.01 389.35 265.96 390.35 265.89 391.58 C 265.82 392.82 264.77 393.81 263.54 393.81 C 262.30 393.81 261.36 392.82 261.43 391.58 C 261.5 390.35 262.55 389.35 263.78 389.35 "/> <path fill-rule="evenodd" fill="#fff" d="M 262.78 395.23 C 264.01 395.23 264.96 396.23 264.89 397.46 C 264.82 398.69 263.77 399.69 262.54 399.69 C 261.31 399.69 260.36 398.69 260.43 397.46 C 260.5 396.23 261.55 395.23 262.78 395.23 "/> <path fill-rule="evenodd" fill="#fff" d="M 261.78 401.10 C 263.01 401.10 263.96 402.10 263.89 403.33 C 263.82 404.56 262.77 405.56 261.54 405.56 C 260.31 405.56 259.36 404.56 259.43 403.33 C 259.50 402.10 260.55 401.10 261.78 401.10 "/> <path fill-rule="evenodd" fill="#fff" d="M 260.78 406.97 C 262.01 406.97 262.96 407.97 262.89 409.20 C 262.82 410.44 261.77 411.43 260.54 411.43 C 259.31 411.43 258.36 410.44 258.43 409.20 C 258.50 407.97 259.55 406.97 260.78 406.97 "/> <path fill-rule="evenodd" fill="#fff" d="M 272.42 383.48 C 273.66 383.48 274.60 384.48 274.53 385.71 C 274.46 386.94 273.41 387.94 272.18 387.94 C 270.95 387.94 270.00 386.94 270.07 385.71 C 270.14 384.48 271.19 383.48 272.42 383.48 "/> <path fill-rule="evenodd" fill="#fff" d="M 271.42 389.35 C 272.66 389.35 273.60 390.35 273.53 391.58 C 273.46 392.82 272.41 393.81 271.18 393.81 C 269.95 393.81 269.01 392.82 269.07 391.58 C 269.14 390.35 270.19 389.35 271.42 389.35 "/> <path fill-rule="evenodd" fill="#fff" d="M 270.42 395.23 C 271.66 395.23 272.60 396.23 272.53 397.46 C 272.47 398.69 271.41 399.69 270.18 399.69 C 268.95 399.69 268.01 398.69 268.07 397.46 C 268.14 396.23 269.19 395.23 270.42 395.23 "/> <path fill-rule="evenodd" fill="#fff" d="M 269.43 401.10 C 270.66 401.10 271.60 402.10 271.53 403.33 C 271.47 404.56 270.41 405.56 269.18 405.56 C 267.95 405.56 267.01 404.56 267.07 403.33 C 267.14 402.10 268.19 401.10 269.43 401.10 "/> <path fill-rule="evenodd" fill="#fff" d="M 281.07 377.60 C 282.30 377.60 283.24 378.60 283.17 379.83 C 283.11 381.07 282.05 382.07 280.82 382.07 C 279.59 382.07 278.65 381.07 278.71 379.83 C 278.78 378.60 279.83 377.60 281.07 377.60 "/> <path fill-rule="evenodd" fill="#fff" d="M 280.07 383.48 C 281.30 383.48 282.25 384.48 282.17 385.71 C 282.11 386.94 281.05 387.94 279.82 387.94 C 278.59 387.94 277.65 386.94 277.71 385.71 C 277.78 384.48 278.83 383.48 280.07 383.48 "/> <path fill-rule="evenodd" fill="#fff" d="M 279.07 389.35 C 280.30 389.35 281.25 390.35 281.18 391.58 C 281.11 392.82 280.06 393.81 278.82 393.81 C 277.59 393.81 276.65 392.82 276.72 391.58 C 276.78 390.35 277.83 389.35 279.07 389.35 "/> <path fill-rule="evenodd" fill="#fff" d="M 278.07 395.23 C 279.30 395.23 280.25 396.23 280.18 397.46 C 280.11 398.69 279.06 399.69 277.83 399.69 C 276.59 399.69 275.65 398.69 275.72 397.46 C 275.78 396.23 276.84 395.23 278.07 395.23 "/> <path fill-rule="evenodd" fill="#fff" d="M 277.07 401.10 C 278.30 401.10 279.25 402.10 279.18 403.33 C 279.11 404.56 278.06 405.56 276.83 405.56 C 275.59 405.56 274.65 404.56 274.72 403.33 C 274.78 402.10 275.84 401.10 277.07 401.10 "/> <path fill-rule="evenodd" fill="#fff" d="M 276.07 406.97 C 277.30 406.97 278.25 407.97 278.18 409.20 C 278.11 410.44 277.06 411.43 275.83 411.43 C 274.60 411.43 273.65 410.44 273.72 409.20 C 273.79 407.97 274.84 406.97 276.07 406.97 "/> <path fill-rule="evenodd" fill="#fff" d="M 289.71 371.73 C 290.94 371.73 291.89 372.73 291.82 373.96 C 291.75 375.19 290.70 376.19 289.46 376.19 C 288.23 376.19 287.29 375.19 287.36 373.96 C 287.42 372.73 288.48 371.73 289.71 371.73 "/> <path fill-rule="evenodd" fill="#fff" d="M 288.71 377.60 C 289.94 377.60 290.89 378.60 290.82 379.83 C 290.75 381.07 289.70 382.07 288.47 382.07 C 287.23 382.07 286.29 381.07 286.36 379.83 C 286.42 378.60 287.48 377.60 288.71 377.60 "/> <path fill-rule="evenodd" fill="#fff" d="M 287.71 383.48 C 288.94 383.48 289.89 384.48 289.82 385.71 C 289.75 386.94 288.70 387.94 287.47 387.94 C 286.24 387.94 285.29 386.94 285.36 385.71 C 285.42 384.48 286.48 383.48 287.71 383.48 "/> <path fill-rule="evenodd" fill="#fff" d="M 284.71 401.10 C 285.94 401.10 286.89 402.10 286.82 403.33 C 286.76 404.56 285.70 405.56 284.47 405.56 C 283.24 405.56 282.30 404.56 282.36 403.33 C 282.43 402.10 283.48 401.10 284.71 401.10 "/> <path fill-rule="evenodd" fill="#fff" d="M 283.71 406.97 C 284.95 406.97 285.89 407.97 285.82 409.20 C 285.76 410.44 284.70 411.43 283.47 411.43 C 282.24 411.43 281.30 410.44 281.36 409.20 C 281.43 407.97 282.48 406.97 283.71 406.97 "/> <path fill-rule="evenodd" fill="#fff" d="M 282.72 412.85 C 283.95 412.85 284.89 413.85 284.82 415.08 C 284.76 416.31 283.70 417.31 282.47 417.31 C 281.24 417.31 280.30 416.31 280.36 415.08 C 280.43 413.85 281.48 412.85 282.72 412.85 "/> <path fill-rule="evenodd" fill="#fff" d="M 298.35 365.86 C 299.58 365.86 300.53 366.85 300.46 368.09 C 300.39 369.32 299.34 370.32 298.11 370.32 C 296.88 370.32 295.93 369.32 296.00 368.09 C 296.07 366.85 297.12 365.86 298.35 365.86 "/> <path fill-rule="evenodd" fill="#fff" d="M 297.35 371.73 C 298.58 371.73 299.53 372.73 299.46 373.96 C 299.39 375.19 298.34 376.19 297.11 376.19 C 295.88 376.19 294.93 375.19 295.00 373.96 C 295.07 372.73 296.12 371.73 297.35 371.73 "/> <path fill-rule="evenodd" fill="#fff" d="M 296.35 377.60 C 297.58 377.60 298.53 378.60 298.46 379.83 C 298.39 381.07 297.34 382.07 296.11 382.07 C 294.88 382.07 293.93 381.07 294.00 379.83 C 294.07 378.60 295.12 377.60 296.35 377.60 "/> <path fill-rule="evenodd" fill="#fff" d="M 291.36 406.97 C 292.59 406.97 293.53 407.97 293.47 409.20 C 293.40 410.44 292.35 411.43 291.12 411.43 C 289.88 411.43 288.94 410.44 289.01 409.20 C 289.07 407.97 290.13 406.97 291.36 406.97 "/> <path fill-rule="evenodd" fill="#fff" d="M 290.36 412.85 C 291.59 412.85 292.53 413.85 292.47 415.08 C 292.40 416.31 291.35 417.31 290.12 417.31 C 288.89 417.31 287.94 416.31 288.01 415.08 C 288.07 413.85 289.13 412.85 290.36 412.85 "/> </svg> </a>
+    <div class="bar-title"><small id="barSub">Turnaje</small><span class="brand-name" id="barTitle">Americano &amp; Mexicano</span></div>
     <span class="spacer"></span>
-    <span class="pill-code" id="barCode" hidden></span>
+    <button class="share-btn" id="barShare" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg><span>Sdílet</span></button>
   </div>
 </header>
 
@@ -301,7 +318,7 @@ if (code) openTournament(code, keyParam); else renderHome();
 /* ====== Domů / nový turnaj ====== */
 function renderHome(){
   document.title = 'Turnaje · Padel Klatovy';
-  $('#barTitle').textContent = 'Turnaje'; $('#barCode').hidden = true;
+  $('#barTitle').textContent = 'Americano & Mexicano'; $('#barSub').textContent = 'Turnaje'; $('#barShare').hidden = true;
   const mine = store.get('turnaje.mine', []);
   const form = store.get('turnaje.draft', {name:'', format:'americano', points:24, courts:2, players:'', rounds:null});
   $('#app').innerHTML = `
@@ -397,7 +414,13 @@ async function openTournament(code, key){
   state.me = store.get('turnaje.me.'+code, null);
   document.title = t.name + ' · Padel Klatovy';
   $('#barTitle').textContent = t.name;
-  $('#barCode').textContent = t.code; $('#barCode').hidden = false;
+  $('#barSub').textContent = (t.format==='mexicano'?'Mexicano':'Americano') + ' · kód ' + t.code;
+  const sh = $('#barShare'); sh.hidden = false;
+  sh.onclick = async () => {
+    const url = playerUrl(t.code);
+    if (navigator.share) { try { await navigator.share({title:t.name, text:t.name+' – rozpis, zápis skóre a pořadí', url}); return; } catch(e) { if (e.name==='AbortError') return; } }
+    state.tab='sdilet'; render(); scrollTo({top:0, behavior:'smooth'});
+  };
   await loadMatches();
   const cur = currentRound(); state.round = cur;
   if (params.get('new')) { state.tab = 'sdilet'; history.replaceState(null,'','?t='+code); }
@@ -450,29 +473,38 @@ function render(){
 }
 
 function renderMatches(rs){
-  if (!rs.includes(state.round)) state.round = currentRound();
-  const r = state.round;
-  const ms = state.matches.filter(m=>m.round===r);
-  const inRound = new Set(ms.flatMap(m=>[m.a1,m.a2,m.b1,m.b2]));
-  const sitting = state.t.players.map((_,i)=>i).filter(i=>!inRound.has(i));
-  const isLast = r === rs[rs.length-1];
-  const roundDone = ms.length && ms.every(isDone);
-  const canNext = state.admin && isLast && roundDone;
-  $('#pane').innerHTML = `
-    <div class="rounds" role="group" aria-label="Kola">${rs.map(x=>{
-      const d = state.matches.filter(m=>m.round===x).every(isDone);
-      return `<button class="rnd${d?' done':''}" data-r="${x}" aria-pressed="${x===r}">${x}<small>${d?'hotovo':'kolo'}</small></button>`; }).join('')}</div>
-    <div class="stack">
-      ${ms.map(m => matchCard(m)).join('')}
+  const last = rs[rs.length-1];
+  const cur = currentRound();
+  const html = rs.map(r => {
+    const ms = state.matches.filter(m=>m.round===r);
+    const inRound = new Set(ms.flatMap(m=>[m.a1,m.a2,m.b1,m.b2]));
+    const sitting = state.t.players.map((_,i)=>i).filter(i=>!inRound.has(i));
+    const d = ms.filter(isDone).length, all = d===ms.length;
+    const status = all ? '<span class="st done">Dohráno</span>' : (r===cur ? '<span class="st now">Hraje se</span>' : (d ? `<span class="st">${d}/${ms.length}</span>` : ''));
+    return `<section class="round${r===cur?' current':''}" id="kolo-${r}">
+      <div class="round-head"><h2>${r}. kolo</h2>${status}</div>
+      <div class="round-grid">${ms.map(matchCard).join('')}</div>
       ${sitting.length ? `<div class="bye">Pauza: ${sitting.map(i=>`<b>${nameHtml(i)}</b>`).join(', ')}</div>` : ''}
-      ${canNext ? `<button class="btn ball block" id="nextRound">Vylosovat ${r+1}. kolo${state.t.format==='mexicano'?' podle pořadí':''}</button>` : ''}
-      ${state.admin && isLast && !roundDone && state.t.format==='mexicano' ? `<p class="hint">Další kolo Mexicana půjde vylosovat, až bude zapsané skóre všech zápasů v tomto kole.</p>` : ''}
-      ${!state.admin && isLast && roundDone && state.t.format==='mexicano' ? `<p class="hint">Kolo je dohrané. Další kolo vylosuje organizátor.</p>` : ''}
-    </div>`;
-  document.querySelectorAll('[data-r]').forEach(b => b.onclick = () => { state.round=+b.dataset.r; renderMatches(rs); });
+    </section>`;
+  }).join('');
+  const lastDone = rs.length && state.matches.filter(m=>m.round===last).every(isDone);
+  $('#pane').innerHTML = `<div class="rounds-list">${html}
+    ${state.admin && lastDone ? `<button class="btn ball block" id="nextRound">Vylosovat ${last+1}. kolo${state.t.format==='mexicano'?' podle pořadí':''}</button>` : ''}
+    ${state.admin && !lastDone && state.t.format==='mexicano' ? `<p class="hint">Další kolo Mexicana půjde vylosovat, až bude zapsané skóre všech zápasů v ${last}. kole.</p>` : ''}
+    ${!state.admin && lastDone && state.t.format==='mexicano' ? `<p class="hint">Kolo je dohrané. Další kolo vylosuje organizátor.</p>` : ''}
+  </div>
+  ${rs.length>1 && cur!==rs[0] ? `<button class="jump" id="jumpCur">↓ ${cur}. kolo</button>`:''}`;
   document.querySelectorAll('[data-m]').forEach(b => b.onclick = () => openScore(b.dataset.m));
   const nx = $('#nextRound'); if (nx) nx.onclick = () => addRound(nx);
-  const cur = $('.rnd[aria-pressed="true"]'); if (cur) cur.scrollIntoView({block:'nearest', inline:'center'});
+  const j = $('#jumpCur');
+  const goCur = (smooth) => { const el = $('#kolo-'+cur); if (el) el.scrollIntoView({block:'start', behavior: smooth?'smooth':'auto'}); };
+  if (j) {
+    j.onclick = () => goCur(true);
+    const el = $('#kolo-'+cur);
+    const upd = () => { if (!el.isConnected) return removeEventListener('scroll', upd); const r = el.getBoundingClientRect(); j.hidden = r.top < innerHeight && r.bottom > 140; };
+    addEventListener('scroll', upd, {passive:true}); upd();
+  }
+  if (!state.scrolledOnce) { state.scrolledOnce = true; if (cur!==rs[0]) setTimeout(()=>goCur(false), 0); }
 }
 function matchCard(m){
   const d = isDone(m), wa = d && m.score_a>m.score_b, wb = d && m.score_b>m.score_a;
@@ -633,7 +665,7 @@ async function addRound(btn){
   const {error} = await sb.rpc('turnaj_add_matches', {p_code:t.code, p_token:state.admin, p_matches:ms});
   btn.disabled = false;
   if (error) return toast('Chyba: '+error.message);
-  await loadMatches(); state.round = next; state.tab='zapasy'; toast(`${next}. kolo vylosováno`); render();
+  await loadMatches(); state.scrolledOnce = false; state.tab='zapasy'; toast(`${next}. kolo vylosováno`); render();
 }
 </script>
 </body>
