@@ -1,0 +1,640 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Turnaje · Padel Klatovy</title>
+<meta name="description" content="Rozlosování a počítání Americana a Mexicana. Skóre zapisují hráči sami přes sdílený link.">
+<meta property="og:title" content="Padel turnaj – zapiš skóre">
+<meta property="og:description" content="Rozpis zápasů, zápis skóre a živé pořadí.">
+<meta name="theme-color" content="#123A6B">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ground:#EEF2F0; --surface:#FFFFFF; --surface-2:#F5F8F7; --ink:#0E1B2C; --ink-2:#4A5A6C; --line:#D5DEDB;
+  --court:#123A6B; --court-2:#1C5496; --on-court:#FFFFFF; --ball:#D6F03C; --ball-ink:#1B2400;
+  --win:#1E7A46; --warn:#B45309; --danger:#B42318; --focus:#1C5496;
+  --radius:14px; --shadow:0 1px 2px rgba(14,27,44,.06),0 6px 20px rgba(14,27,44,.06);
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --ground:#08111D; --surface:#101C2D; --surface-2:#15243A; --ink:#E7EEF6; --ink-2:#9AAABD; --line:#22344D;
+  --court:#0F2E55; --court-2:#2B6CC0; --win:#4ADE80; --warn:#FBBF24; --danger:#F87171; --focus:#7FB2F0;
+  --shadow:0 1px 2px rgba(0,0,0,.3); color-scheme:dark;}}
+:root[data-theme="dark"]{
+  --ground:#08111D; --surface:#101C2D; --surface-2:#15243A; --ink:#E7EEF6; --ink-2:#9AAABD; --line:#22344D;
+  --court:#0F2E55; --court-2:#2B6CC0; --win:#4ADE80; --warn:#FBBF24; --danger:#F87171; --focus:#7FB2F0;
+  --shadow:0 1px 2px rgba(0,0,0,.3); color-scheme:dark;}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--ground);color:var(--ink);font:15px/1.45 "Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh}
+[hidden]{display:none!important}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.num,.display{font-family:"Barlow Condensed","Arial Narrow",system-ui,sans-serif}
+.num{font-variant-numeric:tabular-nums}
+
+/* top bar */
+.bar{background:var(--court);color:var(--on-court);padding:calc(env(safe-area-inset-top,0px) + 12px) 16px 12px;position:sticky;top:0;z-index:20}
+.bar-in{max-width:760px;margin:0 auto;display:flex;align-items:center;gap:12px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit;min-width:0}
+.brand-mark{width:28px;height:28px;border-radius:50%;background:var(--ball);flex:none;position:relative;overflow:hidden}
+.brand-mark::before,.brand-mark::after{content:"";position:absolute;width:28px;height:28px;border:2px solid rgba(255,255,255,.85);border-radius:50%;top:0}
+.brand-mark::before{left:-17px}.brand-mark::after{right:-17px}
+.brand-txt{display:flex;flex-direction:column;line-height:1.05;min-width:0}
+.brand-club{font:600 11px/1 "Barlow",sans-serif;letter-spacing:.14em;text-transform:uppercase;opacity:.75}
+.brand-name{font:700 21px/1.1 "Barlow Condensed",sans-serif;letter-spacing:.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar .spacer{flex:1}
+.pill-code{font:600 14px/1 "Barlow Condensed",sans-serif;letter-spacing:.12em;background:rgba(255,255,255,.12);padding:7px 10px;border-radius:999px;white-space:nowrap}
+
+main{max-width:760px;margin:0 auto;padding:16px 16px 120px}
+h1,h2,h3{font-family:"Barlow Condensed","Arial Narrow",sans-serif;margin:0;text-wrap:balance;letter-spacing:.005em}
+h2{font-size:24px;font-weight:700}
+h3{font-size:18px;font-weight:600}
+.muted{color:var(--ink-2)}
+.eyebrow{font:600 11.5px/1 "Barlow",sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2)}
+.stack{display:flex;flex-direction:column;gap:12px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px}
+.btn{appearance:none;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:11px 16px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;text-decoration:none;color:var(--ink)}
+.btn:hover{border-color:var(--court-2)}
+.btn.primary{background:var(--court-2);border-color:var(--court-2);color:#fff}
+.btn.ball{background:var(--ball);border-color:var(--ball);color:var(--ball-ink)}
+.btn.wa{background:#1FA855;border-color:#1FA855;color:#fff}
+.btn.danger{color:var(--danger);border-color:color-mix(in srgb,var(--danger) 40%,var(--line))}
+.btn.ghost{background:transparent}
+.btn.block{width:100%}
+.btn:disabled{opacity:.5;cursor:default}
+
+label.f{display:flex;flex-direction:column;gap:6px;font-weight:600;font-size:14px}
+label.f small{font-weight:400;color:var(--ink-2)}
+input.in,select.in,textarea.in{font-weight:400;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:11px 12px;width:100%;min-height:44px}
+textarea.in{min-height:190px;resize:vertical;line-height:1.5}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.seg{display:grid;grid-template-columns:1fr 1fr;background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:4px;gap:4px}
+.seg button{border:0;background:transparent;border-radius:9px;padding:10px 8px;cursor:pointer;text-align:left;display:flex;flex-direction:column;gap:2px}
+.seg button b{font:700 18px/1.1 "Barlow Condensed",sans-serif}
+.seg button span{font-size:12.5px;font-weight:400;color:var(--ink-2);line-height:1.3}
+.seg button[aria-pressed="true"]{background:var(--surface);box-shadow:var(--shadow);outline:2px solid var(--court-2)}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 12px;font-weight:600;cursor:pointer;min-height:36px}
+.chip[aria-pressed="true"]{background:var(--court-2);color:#fff;border-color:var(--court-2)}
+
+/* tabs */
+.tabs{display:flex;gap:4px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:4px;margin-bottom:14px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 64px);z-index:10}
+.tabs button{flex:1;border:0;background:transparent;padding:10px 6px;border-radius:9px;font-weight:600;cursor:pointer;min-height:40px}
+.tabs button[aria-selected="true"]{background:var(--court);color:#fff}
+
+/* round strip */
+.rounds{display:flex;gap:6px;overflow-x:auto;padding:2px 2px 8px;scrollbar-width:thin;margin-bottom:6px}
+.rnd{flex:none;min-width:48px;height:48px;border-radius:12px;border:1px solid var(--line);background:var(--surface);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;font:700 19px/1 "Barlow Condensed",sans-serif;position:relative}
+.rnd small{font:600 9.5px/1 "Barlow",sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2);margin-top:3px}
+.rnd.done small{color:var(--win)}
+.rnd[aria-pressed="true"]{background:var(--court-2);border-color:var(--court-2);color:#fff}
+.rnd[aria-pressed="true"] small{color:rgba(255,255,255,.8)}
+
+/* match card */
+.match{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);display:grid;grid-template-columns:1fr auto;cursor:pointer;overflow:hidden;text-align:left;width:100%;padding:0}
+.match:hover{border-color:var(--court-2)}
+.match .court-lbl{grid-column:1/-1;display:flex;justify-content:space-between;align-items:center;padding:9px 14px;background:var(--surface-2);border-bottom:1px solid var(--line)}
+.match .teams{padding:10px 14px;display:flex;flex-direction:column;gap:2px}
+.team{display:flex;align-items:center;gap:8px;min-height:34px;font-size:16px;font-weight:500}
+.team .n{overflow-wrap:anywhere}
+.team.win{font-weight:700}
+.vs{height:1px;background:var(--line);margin:3px 0}
+.scores{display:flex;flex-direction:column;justify-content:center;gap:2px;padding:10px 16px 10px 8px;min-width:70px;align-items:flex-end}
+.sc{font:700 28px/34px "Barlow Condensed",sans-serif;font-variant-numeric:tabular-nums;min-width:40px;text-align:right}
+.sc.win{color:var(--win)}
+.sc.empty{color:var(--ink-2);opacity:.45}
+.enter{font-size:13px;font-weight:600;color:var(--court-2);white-space:nowrap}
+.me{background:var(--ball);color:var(--ball-ink);border-radius:6px;padding:0 5px;margin:0 -5px}
+.bye{padding:10px 14px;border:1px dashed var(--line);border-radius:12px;color:var(--ink-2);font-size:14px}
+
+/* table */
+.tbl-wrap{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius)}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
+th,td{padding:10px 8px;text-align:right;white-space:nowrap}
+th{font:600 11px/1 "Barlow",sans-serif;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2);border-bottom:1px solid var(--line);background:var(--surface-2)}
+td{border-bottom:1px solid var(--line)}
+tr:last-child td{border-bottom:0}
+td.name,th.name{text-align:left;white-space:normal;width:100%}
+td.rank{font:700 20px/1 "Barlow Condensed",sans-serif;text-align:center;width:40px;color:var(--ink-2)}
+tr.top1 td.rank{color:var(--ink)}
+tr.top1 td.rank span{background:var(--ball);color:var(--ball-ink);border-radius:8px;padding:3px 8px}
+td.pts{font:700 22px/1 "Barlow Condensed",sans-serif;padding-right:14px}
+th:first-child,td:first-child{padding-left:12px}
+
+/* sheet */
+.scrim{position:fixed;inset:0;background:rgba(5,12,22,.55);z-index:50;display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:var(--surface);width:100%;max-width:520px;border-radius:20px 20px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:14px;max-height:92vh;overflow:auto}
+@media (min-width:600px){.scrim{align-items:center}.sheet{border-radius:20px}}
+.sheet-head{display:flex;justify-content:space-between;align-items:center}
+.pad{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.side{background:var(--surface-2);border:1px solid var(--line);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:10px;align-items:stretch}
+.side .who{font-weight:600;font-size:14.5px;line-height:1.3;min-height:38px}
+.stepper{display:grid;grid-template-columns:44px 1fr 44px;align-items:center;gap:6px}
+.stepper button{height:44px;border-radius:10px;border:1px solid var(--line);background:var(--surface);font:700 22px/1 "Barlow",sans-serif;cursor:pointer}
+.stepper input{text-align:center;font:700 44px/1 "Barlow Condensed",sans-serif;font-variant-numeric:tabular-nums;border:0;background:transparent;width:100%;padding:0;min-width:0}
+.quick{display:flex;gap:6px;flex-wrap:wrap}
+.quick button{flex:1 0 44px;min-height:38px;border-radius:9px;border:1px solid var(--line);background:var(--surface-2);font:600 16px/1 "Barlow Condensed",sans-serif;cursor:pointer}
+.hint{font-size:13px;color:var(--ink-2)}
+.err{color:var(--danger);font-size:14px;font-weight:600}
+
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--ground);padding:10px 16px;border-radius:999px;font-weight:600;z-index:60;box-shadow:var(--shadow);max-width:calc(100% - 32px)}
+.live{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-2)}
+.live i{width:8px;height:8px;border-radius:50%;background:var(--ink-2)}
+.live.on i{background:var(--win);box-shadow:0 0 0 3px color-mix(in srgb,var(--win) 25%,transparent)}
+.list-item{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid var(--line);text-decoration:none;color:inherit}
+.list-item:last-child{border-bottom:0}
+.linkbox{display:flex;gap:6px}
+.linkbox input{flex:1;min-width:0;font-size:13px}
+.progress{height:6px;background:var(--surface-2);border-radius:999px;overflow:hidden;border:1px solid var(--line)}
+.progress i{display:block;height:100%;background:var(--court-2)}
+@media (max-width:420px){.grid2{grid-template-columns:1fr}.sc{font-size:26px}}
+@media (prefers-reduced-motion:no-preference){.sheet{animation:up .18s ease-out}@keyframes up{from{transform:translateY(24px);opacity:.6}}}
+</style>
+</head>
+<body>
+<header class="bar">
+  <div class="bar-in">
+    <a class="brand" href="./" id="brandLink">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span class="brand-txt"><span class="brand-club">Padel Klatovy</span><span class="brand-name" id="barTitle">Turnaje</span></span>
+    </a>
+    <span class="spacer"></span>
+    <span class="pill-code" id="barCode" hidden></span>
+  </div>
+</header>
+
+<main id="app"><p class="muted">Načítám…</p></main>
+<div id="toast" class="toast" hidden role="status"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script id="engine">
+/* ====== Rozlosování (bez závislostí, testovatelné) ====== */
+const Engine = (() => {
+  function stats(n, history) {
+    const partner = Array.from({length:n}, () => new Array(n).fill(0));
+    const opp = Array.from({length:n}, () => new Array(n).fill(0));
+    const played = new Array(n).fill(0), sat = new Array(n).fill(0);
+    const rounds = {};
+    for (const m of history) {
+      (rounds[m.round] ||= new Set());
+      const A=[m.a1,m.a2], B=[m.b1,m.b2];
+      partner[A[0]][A[1]]++; partner[A[1]][A[0]]++;
+      partner[B[0]][B[1]]++; partner[B[1]][B[0]]++;
+      for (const a of A) for (const b of B) { opp[a][b]++; opp[b][a]++; }
+      for (const p of [...A,...B]) { played[p]++; rounds[m.round].add(p); }
+    }
+    for (const r in rounds) for (let i=0;i<n;i++) if (!rounds[r].has(i)) sat[i]++;
+    return {partner, opp, played, sat};
+  }
+  function shuffle(a, rnd) { for (let i=a.length-1;i>0;i--) { const j=Math.floor(rnd()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+  function chooseSitters(n, need, st, rnd, rankOrder) {
+    // kdo má nejméně pauz, jde na pauzu; při shodě náhodně (Mexicano: nejhůř postavení)
+    const idx = shuffle([...Array(n).keys()], rnd);
+    const rank = rankOrder ? Object.fromEntries(rankOrder.map((p,i)=>[p,i])) : null;
+    idx.sort((a,b) => (st.sat[a]-st.sat[b]) || (st.played[b]-st.played[a]) || (rank ? rank[b]-rank[a] : 0));
+    return new Set(idx.slice(0, need));
+  }
+  function quadCost(q, st) {
+    // vrátí nejlepší rozdělení čtveřice do dvou párů
+    const opts = [[q[0],q[1],q[2],q[3]],[q[0],q[2],q[1],q[3]],[q[0],q[3],q[1],q[2]]];
+    let best=null, bc=Infinity;
+    for (const [a1,a2,b1,b2] of opts) {
+      const pc = st.partner[a1][a2] + st.partner[b1][b2];
+      const oc = st.opp[a1][b1]+st.opp[a1][b2]+st.opp[a2][b1]+st.opp[a2][b2];
+      const c = pc*pc*100 + pc*40 + oc*oc*3 + oc;
+      if (c < bc) { bc=c; best={a1,a2,b1,b2}; }
+    }
+    return [bc, best];
+  }
+  function americanoRound(n, courts, history, round, rnd=Math.random) {
+    const st = stats(n, history);
+    const c = Math.min(courts, Math.floor(n/4));
+    const sit = chooseSitters(n, n - c*4, st, rnd);
+    const pool = [...Array(n).keys()].filter(p => !sit.has(p));
+    let best=null, bestCost=Infinity;
+    const tries = 1500;
+    for (let t=0; t<tries; t++) {
+      const p = shuffle([...pool], rnd);
+      let cost=0; const ms=[];
+      for (let k=0;k<c;k++) { const [qc,m] = quadCost(p.slice(k*4,k*4+4), st); cost+=qc; ms.push(m); if (cost>=bestCost) break; }
+      if (cost < bestCost) { bestCost=cost; best=ms; if (cost===0) break; }
+    }
+    return best.map((m,i) => ({round, court:i+1, ...m}));
+  }
+  function americanoSchedule(n, courts, rounds, rnd=Math.random) {
+    const out=[];
+    for (let r=1;r<=rounds;r++) out.push(...americanoRound(n, courts, out, r, rnd));
+    return out;
+  }
+  function mexicanoRound(n, courts, history, round, rankOrder, rnd=Math.random) {
+    const st = stats(n, history);
+    const c = Math.min(courts, Math.floor(n/4));
+    const order = rankOrder && rankOrder.length===n ? rankOrder : shuffle([...Array(n).keys()], rnd);
+    const sit = chooseSitters(n, n - c*4, st, rnd, rankOrder && rankOrder.length===n ? rankOrder : null);
+    const play = order.filter(p => !sit.has(p));
+    const ms=[];
+    for (let k=0;k<c;k++) {
+      const [p1,p2,p3,p4] = play.slice(k*4,k*4+4);
+      // 1.+4. vs 2.+3.; pokud už spolu hráli, zkus 1.+3. vs 2.+4.
+      let m = {a1:p1,a2:p4,b1:p2,b2:p3};
+      if (st.partner[p1][p4]+st.partner[p2][p3] > st.partner[p1][p3]+st.partner[p2][p4]) m = {a1:p1,a2:p3,b1:p2,b2:p4};
+      ms.push({round, court:k+1, ...m});
+    }
+    return ms;
+  }
+  function standings(n, matches) {
+    const rows = Array.from({length:n}, (_,i)=>({i, pts:0, pf:0, pa:0, w:0, d:0, l:0, mp:0}));
+    for (const m of matches) {
+      if (m.score_a==null || m.score_b==null) continue;
+      const sides = [[[m.a1,m.a2], m.score_a, m.score_b],[[m.b1,m.b2], m.score_b, m.score_a]];
+      for (const [ps, f, a] of sides) for (const p of ps) {
+        const r = rows[p]; r.mp++; r.pts+=f; r.pf+=f; r.pa+=a;
+        if (f>a) r.w++; else if (f<a) r.l++; else r.d++;
+      }
+    }
+    rows.sort((x,y) => (y.pts-x.pts) || ((y.pf-y.pa)-(x.pf-x.pa)) || (y.w-x.w) || (x.i-y.i));
+    return rows;
+  }
+  function defaultRounds(n, courts) {
+    const c = Math.min(courts, Math.floor(n/4));
+    if (c<1) return 0;
+    // cíl: každý si zahraje s každým jako partner ~1× → n-1 zápasů na hráče
+    const perRoundPlaying = c*4;
+    return Math.max(3, Math.min(12, Math.round((n-1) * n / perRoundPlaying)));
+  }
+  return {stats, americanoRound, americanoSchedule, mexicanoRound, standings, defaultRounds};
+})();
+if (typeof module !== 'undefined') module.exports = Engine;
+</script>
+<script>
+/* ====== Konfigurace ====== */
+const SUPABASE_URL = 'https://ppntayyhksqgsxmemvaj.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_lFkYMLqXgmRGx0T5c-T9wg_h9V_BeKa';
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {auth:{persistSession:false}});
+
+const $ = (s, el=document) => el.querySelector(s);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const store = {
+  get(k, d){ try { const v = localStorage.getItem(k); return v==null ? d : JSON.parse(v); } catch { return d; } },
+  set(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch {} }
+};
+function toast(msg){ const t=$('#toast'); t.textContent=msg; t.hidden=false; clearTimeout(toast._t); toast._t=setTimeout(()=>t.hidden=true, 2200); }
+async function copy(text){ try { await navigator.clipboard.writeText(text); toast('Zkopírováno'); } catch { prompt('Zkopíruj odkaz:', text); } }
+const baseUrl = () => location.origin + location.pathname;
+const playerUrl = code => `${baseUrl()}?t=${code}`;
+const adminUrl = (code, tok) => `${baseUrl()}?t=${code}&k=${tok}`;
+
+const state = { t:null, matches:[], admin:null, tab:'zapasy', round:null, me:null, channel:null, live:false };
+
+/* ====== Router ====== */
+const params = new URLSearchParams(location.search);
+const code = (params.get('t')||'').toUpperCase().replace(/[^A-Z0-9]/g,'');
+const keyParam = params.get('k');
+if (code) openTournament(code, keyParam); else renderHome();
+
+/* ====== Domů / nový turnaj ====== */
+function renderHome(){
+  document.title = 'Turnaje · Padel Klatovy';
+  $('#barTitle').textContent = 'Turnaje'; $('#barCode').hidden = true;
+  const mine = store.get('turnaje.mine', []);
+  const form = store.get('turnaje.draft', {name:'', format:'americano', points:24, courts:2, players:'', rounds:null});
+  $('#app').innerHTML = `
+  <div class="stack">
+    <section class="card stack">
+      <div><p class="eyebrow">Nový turnaj</p><h2>Rozlosuj a pošli link do WhatsAppu</h2>
+      <p class="muted" style="margin:.3em 0 0">Hráči si otevřou odkaz a skóre zapisují sami. Pořadí se počítá živě.</p></div>
+      <label class="f">Název<input class="in" id="fName" maxlength="80" placeholder="Středeční Americano" value="${esc(form.name)}"></label>
+      <div class="f" style="display:flex;flex-direction:column;gap:6px;font-weight:600;font-size:14px">Formát
+        <div class="seg" role="group" aria-label="Formát">
+          <button type="button" data-fmt="americano" aria-pressed="${form.format==='americano'}"><b>Americano</b><span>Předem rozlosované kolo po kole, partneři se střídají</span></button>
+          <button type="button" data-fmt="mexicano" aria-pressed="${form.format==='mexicano'}"><b>Mexicano</b><span>Každé další kolo podle pořadí: 1.+4. proti 2.+3.</span></button>
+        </div>
+      </div>
+      <div class="grid2">
+        <label class="f">Míčů na zápas<small>Součet obou týmů. 0 = volné skóre.</small>
+          <select class="in" id="fPoints">${[16,21,24,32,0].map(p=>`<option value="${p}" ${+form.points===p?'selected':''}>${p||'Volné (na čas / gamy)'}</option>`).join('')}</select></label>
+        <label class="f">Počet kurtů<small>Kolik zápasů běží naráz.</small>
+          <select class="in" id="fCourts">${[1,2,3,4,5,6,8].map(c=>`<option ${+form.courts===c?'selected':''}>${c}</option>`).join('')}</select></label>
+      </div>
+      <label class="f">Hráči<small>Jeden na řádek (nebo oddělené čárkou). Min. 4. Když počet není násobek 4, hráči se střídají na pauze.</small>
+        <textarea class="in" id="fPlayers" placeholder="Karel&#10;Štefan&#10;Martin&#10;Pavel&#10;…">${esc(form.players)}</textarea></label>
+      <label class="f" id="roundsWrap">Počet kol<small id="roundsHint"></small>
+        <input class="in num" id="fRounds" type="number" inputmode="numeric" min="1" max="30"></label>
+      <p class="err" id="fErr" hidden></p>
+      <button class="btn primary block" id="fCreate">Rozlosovat a vytvořit</button>
+    </section>
+
+    <section class="card stack">
+      <h3>Otevřít turnaj podle kódu</h3>
+      <div class="linkbox"><input class="in num" id="openCode" maxlength="6" placeholder="např. K7PQ2M" style="text-transform:uppercase;letter-spacing:.15em;font-size:18px"><button class="btn" id="openBtn">Otevřít</button></div>
+    </section>
+
+    ${mine.length ? `<section class="card"><h3 style="margin-bottom:4px">Moje turnaje</h3>${mine.slice(0,12).map(m=>`
+      <a class="list-item" href="?t=${esc(m.code)}"><span><b>${esc(m.name)}</b><br><span class="muted" style="font-size:13px">${m.format==='mexicano'?'Mexicano':'Americano'} · ${new Date(m.created).toLocaleDateString('cs-CZ')}</span></span><span class="pill-code" style="background:var(--surface-2)">${esc(m.code)}</span></a>`).join('')}</section>` : ''}
+  </div>`;
+  let fmt = form.format;
+  const players = () => $('#fPlayers').value.split(/[\n,;]+/).map(s=>s.trim()).filter(Boolean);
+  const upd = () => {
+    const n = players().length, c = +$('#fCourts').value;
+    $('#roundsWrap').hidden = fmt !== 'americano';
+    const def = Engine.defaultRounds(n, c);
+    if (!$('#fRounds').dataset.touched) $('#fRounds').value = def || '';
+    const playing = Math.min(c, Math.floor(n/4))*4;
+    $('#roundsHint').textContent = n>=4
+      ? `${n} hráčů, ${playing/4} ${playing/4===1?'kurt':'kurty'} naráz${n>playing?`, ${n-playing} na pauze každé kolo`:''}. Doporučeno ${def} kol. Další kola jde přidat i později.`
+      : 'Zadej aspoň 4 hráče.';
+    store.set('turnaje.draft', {name:$('#fName').value, format:fmt, points:+$('#fPoints').value, courts:c, players:$('#fPlayers').value});
+  };
+  document.querySelectorAll('[data-fmt]').forEach(b => b.onclick = () => { fmt=b.dataset.fmt; document.querySelectorAll('[data-fmt]').forEach(x=>x.setAttribute('aria-pressed', x===b)); upd(); });
+  ['fName','fPoints','fCourts','fPlayers'].forEach(id => $('#'+id).addEventListener('input', upd));
+  $('#fRounds').addEventListener('input', e => e.target.dataset.touched = 1);
+  upd();
+  $('#openBtn').onclick = () => { const c=$('#openCode').value.trim().toUpperCase(); if (c) location.search='?t='+c; };
+  $('#openCode').onkeydown = e => { if (e.key==='Enter') $('#openBtn').click(); };
+  $('#fCreate').onclick = async () => {
+    const err = $('#fErr'); err.hidden = true;
+    const ps = players(), name = $('#fName').value.trim() || 'Padel turnaj';
+    const dup = ps.find((p,i)=>ps.findIndex(q=>q.toLowerCase()===p.toLowerCase())!==i);
+    if (ps.length<4) { err.textContent='Potřebuješ aspoň 4 hráče.'; err.hidden=false; return; }
+    if (ps.length>64) { err.textContent='Maximálně 64 hráčů.'; err.hidden=false; return; }
+    if (dup) { err.textContent=`Jméno „${dup}“ je tam dvakrát – přidej třeba příjmení.`; err.hidden=false; return; }
+    const courts = +$('#fCourts').value, points = +$('#fPoints').value;
+    const rounds = Math.max(1, Math.min(30, +$('#fRounds').value || Engine.defaultRounds(ps.length, courts)));
+    const matches = fmt==='americano' ? Engine.americanoSchedule(ps.length, courts, rounds) : Engine.mexicanoRound(ps.length, courts, [], 1, null);
+    $('#fCreate').disabled = true; $('#fCreate').textContent = 'Losuji…';
+    const {data, error} = await sb.rpc('turnaj_create', {p_name:name, p_format:fmt, p_points:points, p_courts:courts, p_players:ps.map(p=>p.slice(0,40)), p_matches:matches});
+    if (error || !data?.length) { err.textContent='Nepodařilo se uložit: '+(error?.message||'neznámá chyba'); err.hidden=false; $('#fCreate').disabled=false; $('#fCreate').textContent='Rozlosovat a vytvořit'; return; }
+    const {code, admin_token} = data[0];
+    const tokens = store.get('turnaje.tokens', {}); tokens[code]=admin_token; store.set('turnaje.tokens', tokens);
+    const mine = store.get('turnaje.mine', []); mine.unshift({code, name, format:fmt, created:Date.now()}); store.set('turnaje.mine', mine.slice(0,30));
+    store.set('turnaje.draft', {name:'', format:fmt, points, courts, players:$('#fPlayers').value});
+    location.search = '?t='+code+'&new=1';
+  };
+}
+
+/* ====== Turnaj ====== */
+async function openTournament(code, key){
+  const tokens = store.get('turnaje.tokens', {});
+  if (key) { tokens[code]=key; store.set('turnaje.tokens', tokens); history.replaceState(null,'','?t='+code); }
+  const {data:t, error} = await sb.from('turnaj_tournaments').select('id,code,name,format,points_per_match,courts,players,created_at').eq('code', code).maybeSingle();
+  if (error || !t) {
+    $('#app').innerHTML = `<div class="card stack"><h2>Turnaj ${esc(code)} nenalezen</h2><p class="muted">Zkontroluj kód v odkazu.</p><a class="btn" href="./">Zpět</a></div>`;
+    return;
+  }
+  state.t = t;
+  if (tokens[code]) {
+    const {data:ok} = await sb.rpc('turnaj_is_admin', {p_code:code, p_token:tokens[code]});
+    if (ok) state.admin = tokens[code];
+    const mine = store.get('turnaje.mine', []);
+    if (ok && !mine.find(m=>m.code===code)) { mine.unshift({code, name:t.name, format:t.format, created:Date.parse(t.created_at)}); store.set('turnaje.mine', mine.slice(0,30)); }
+  }
+  state.me = store.get('turnaje.me.'+code, null);
+  document.title = t.name + ' · Padel Klatovy';
+  $('#barTitle').textContent = t.name;
+  $('#barCode').textContent = t.code; $('#barCode').hidden = false;
+  await loadMatches();
+  const cur = currentRound(); state.round = cur;
+  if (params.get('new')) { state.tab = 'sdilet'; history.replaceState(null,'','?t='+code); }
+  render();
+  subscribe();
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) loadMatches().then(render); });
+  setInterval(() => { if (!document.hidden && !state.live && !$('.scrim')) loadMatches().then(render); }, 20000);
+}
+async function loadMatches(){
+  const {data} = await sb.from('turnaj_matches').select('*').eq('tournament_id', state.t.id).order('round').order('court');
+  if (data) state.matches = data;
+}
+async function reloadTournament(){
+  const {data} = await sb.from('turnaj_tournaments').select('id,code,name,format,points_per_match,courts,players,created_at').eq('id', state.t.id).single();
+  if (data) state.t = data;
+}
+function subscribe(){
+  state.channel = sb.channel('t-'+state.t.id)
+    .on('postgres_changes', {event:'*', schema:'public', table:'turnaj_matches', filter:`tournament_id=eq.${state.t.id}`}, payload => {
+      const row = payload.new;
+      if (payload.eventType==='UPDATE' && row?.id) {
+        const i = state.matches.findIndex(m=>m.id===row.id);
+        if (i>=0) state.matches[i] = row;
+        if (!$('.scrim')) render();
+      } else { loadMatches().then(() => { if (!$('.scrim')) render(); }); }
+    })
+    .subscribe(status => { state.live = status==='SUBSCRIBED'; const l=$('#live'); if (l) l.className='live'+(state.live?' on':''); });
+}
+const roundsList = () => [...new Set(state.matches.map(m=>m.round))].sort((a,b)=>a-b);
+const isDone = m => m.score_a!=null && m.score_b!=null;
+function currentRound(){ const rs = roundsList(); for (const r of rs) if (state.matches.some(m=>m.round===r && !isDone(m))) return r; return rs[rs.length-1] || 1; }
+const P = i => state.t.players[i];
+const nameHtml = i => `<span class="n${state.me===i?' me':''}">${esc(P(i))}</span>`;
+
+function render(){
+  const t = state.t;
+  const rs = roundsList();
+  const done = state.matches.filter(isDone).length, total = state.matches.length;
+  const tabs = [['zapasy','Zápasy'],['poradi','Pořadí'],['sdilet', state.admin ? 'Správa' : 'Sdílet']];
+  $('#app').innerHTML = `
+    <div class="row" style="justify-content:space-between;margin-bottom:10px">
+      <span class="muted" style="font-size:13.5px">${t.format==='mexicano'?'Mexicano':'Americano'} · ${t.players.length} hráčů · ${t.points_per_match?t.points_per_match+' míčů':'volné skóre'}</span>
+      <span id="live" class="live${state.live?' on':''}"><i></i>${done}/${total} zápasů</span>
+    </div>
+    <div class="progress" style="margin-bottom:14px"><i style="width:${total?done/total*100:0}%"></i></div>
+    <nav class="tabs" role="tablist">${tabs.map(([k,l])=>`<button role="tab" data-tab="${k}" aria-selected="${state.tab===k}">${l}</button>`).join('')}</nav>
+    <div id="pane"></div>`;
+  document.querySelectorAll('[data-tab]').forEach(b => b.onclick = () => { state.tab=b.dataset.tab; render(); });
+  if (state.tab==='zapasy') renderMatches(rs); else if (state.tab==='poradi') renderStandings(); else renderShare();
+}
+
+function renderMatches(rs){
+  if (!rs.includes(state.round)) state.round = currentRound();
+  const r = state.round;
+  const ms = state.matches.filter(m=>m.round===r);
+  const inRound = new Set(ms.flatMap(m=>[m.a1,m.a2,m.b1,m.b2]));
+  const sitting = state.t.players.map((_,i)=>i).filter(i=>!inRound.has(i));
+  const isLast = r === rs[rs.length-1];
+  const roundDone = ms.length && ms.every(isDone);
+  const canNext = state.admin && isLast && roundDone;
+  $('#pane').innerHTML = `
+    <div class="rounds" role="group" aria-label="Kola">${rs.map(x=>{
+      const d = state.matches.filter(m=>m.round===x).every(isDone);
+      return `<button class="rnd${d?' done':''}" data-r="${x}" aria-pressed="${x===r}">${x}<small>${d?'hotovo':'kolo'}</small></button>`; }).join('')}</div>
+    <div class="stack">
+      ${ms.map(m => matchCard(m)).join('')}
+      ${sitting.length ? `<div class="bye">Pauza: ${sitting.map(i=>`<b>${nameHtml(i)}</b>`).join(', ')}</div>` : ''}
+      ${canNext ? `<button class="btn ball block" id="nextRound">Vylosovat ${r+1}. kolo${state.t.format==='mexicano'?' podle pořadí':''}</button>` : ''}
+      ${state.admin && isLast && !roundDone && state.t.format==='mexicano' ? `<p class="hint">Další kolo Mexicana půjde vylosovat, až bude zapsané skóre všech zápasů v tomto kole.</p>` : ''}
+      ${!state.admin && isLast && roundDone && state.t.format==='mexicano' ? `<p class="hint">Kolo je dohrané. Další kolo vylosuje organizátor.</p>` : ''}
+    </div>`;
+  document.querySelectorAll('[data-r]').forEach(b => b.onclick = () => { state.round=+b.dataset.r; renderMatches(rs); });
+  document.querySelectorAll('[data-m]').forEach(b => b.onclick = () => openScore(b.dataset.m));
+  const nx = $('#nextRound'); if (nx) nx.onclick = () => addRound(nx);
+  const cur = $('.rnd[aria-pressed="true"]'); if (cur) cur.scrollIntoView({block:'nearest', inline:'center'});
+}
+function matchCard(m){
+  const d = isDone(m), wa = d && m.score_a>m.score_b, wb = d && m.score_b>m.score_a;
+  return `<button class="match" data-m="${m.id}">
+    <div class="court-lbl"><span class="eyebrow">Kurt ${m.court}</span>${d?'':'<span class="enter">Zapsat skóre →</span>'}</div>
+    <div class="teams">
+      <div class="team${wa?' win':''}">${nameHtml(m.a1)} <span class="muted">&amp;</span> ${nameHtml(m.a2)}</div>
+      <div class="vs"></div>
+      <div class="team${wb?' win':''}">${nameHtml(m.b1)} <span class="muted">&amp;</span> ${nameHtml(m.b2)}</div>
+    </div>
+    <div class="scores">
+      <span class="sc${wa?' win':''}${d?'':' empty'}">${d?m.score_a:'–'}</span>
+      <span class="sc${wb?' win':''}${d?'':' empty'}">${d?m.score_b:'–'}</span>
+    </div></button>`;
+}
+
+function openScore(id){
+  const m = state.matches.find(x=>x.id===id); if (!m) return;
+  const total = state.t.points_per_match;
+  let a = m.score_a, b = m.score_b;
+  if (a==null && total) { a = Math.floor(total/2); b = total-a; }
+  if (a==null) { a=0; b=0; }
+  const scrim = document.createElement('div'); scrim.className='scrim';
+  const quick = total ? [...new Set([0,Math.round(total*.25),Math.floor(total/2)-1,Math.floor(total/2),Math.ceil(total/2)+1,Math.round(total*.75),total])].filter(x=>x>=0&&x<=total) : [];
+  scrim.innerHTML = `<div class="sheet" role="dialog" aria-modal="true" aria-label="Zápis skóre">
+    <div class="sheet-head"><div><p class="eyebrow">${m.round}. kolo · Kurt ${m.court}</p><h3>Zapsat skóre</h3></div><button class="btn ghost" data-x aria-label="Zavřít">✕</button></div>
+    <div class="pad">
+      ${['a','b'].map(s=>`<div class="side">
+        <div class="who">${esc(P(m[s+'1']))} &amp; ${esc(P(m[s+'2']))}</div>
+        <div class="stepper"><button type="button" data-step="${s}" data-d="-1" aria-label="Méně">−</button>
+        <input id="in-${s}" type="number" inputmode="numeric" min="0" max="99" value="${s==='a'?a:b}" aria-label="Skóre">
+        <button type="button" data-step="${s}" data-d="1" aria-label="Více">+</button></div>
+      </div>`).join('')}
+    </div>
+    ${total ? `<div><p class="hint" style="margin:0 0 6px">Rychlá volba pro 1. tým (druhý se dopočítá do ${total}):</p><div class="quick">${quick.map(q=>`<button type="button" data-q="${q}" class="num">${q}:${total-q}</button>`).join('')}</div></div>` : `<p class="hint" style="margin:0">Volné skóre – zadej výsledek obou týmů (např. gamy).</p>`}
+    <p class="err" id="sErr" hidden></p>
+    <div class="row" style="flex-wrap:nowrap">
+      ${isDone(m) ? `<button class="btn danger" data-clear>Smazat</button>` : ''}
+      <button class="btn primary" style="flex:1" data-save>Uložit</button>
+    </div>
+    ${m.updated_at ? `<p class="hint" style="margin:0">Naposledy upraveno ${new Date(m.updated_at).toLocaleTimeString('cs-CZ',{hour:'2-digit',minute:'2-digit'})}</p>` : ''}
+  </div>`;
+  document.body.appendChild(scrim);
+  const ia = $('#in-a', scrim), ib = $('#in-b', scrim);
+  const clamp = v => Math.max(0, Math.min(total||99, isNaN(v)?0:v));
+  const sync = src => { if (!total) return; if (src==='a') ib.value = total - clamp(+ia.value); else ia.value = total - clamp(+ib.value); };
+  scrim.querySelectorAll('[data-step]').forEach(bt => bt.onclick = () => { const inp = bt.dataset.step==='a'?ia:ib; inp.value = clamp(+inp.value + +bt.dataset.d); sync(bt.dataset.step); });
+  ia.oninput = () => sync('a'); ib.oninput = () => sync('b');
+  [ia,ib].forEach(i => i.onfocus = () => i.select());
+  scrim.querySelectorAll('[data-q]').forEach(bt => bt.onclick = () => { ia.value = bt.dataset.q; sync('a'); });
+  const close = () => { scrim.remove(); document.removeEventListener('keydown', onKey); render(); };
+  const onKey = e => { if (e.key==='Escape') close(); };
+  document.addEventListener('keydown', onKey);
+  scrim.onclick = e => { if (e.target===scrim) close(); };
+  $('[data-x]', scrim).onclick = close;
+  const save = async (sa, sbv) => {
+    const {data, error} = await sb.from('turnaj_matches').update({score_a:sa, score_b:sbv, updated_at:new Date().toISOString()}).eq('id', m.id).select().single();
+    if (error) { const e=$('#sErr',scrim); e.textContent='Neuloženo: '+error.message; e.hidden=false; return; }
+    const i = state.matches.findIndex(x=>x.id===m.id); state.matches[i] = data;
+    toast(sa==null ? 'Skóre smazáno' : 'Uloženo');
+    close();
+  };
+  $('[data-save]', scrim).onclick = () => {
+    const sa = +ia.value, sbv = +ib.value;
+    if (!Number.isInteger(sa) || !Number.isInteger(sbv) || sa<0 || sbv<0 || sa>99 || sbv>99) { const e=$('#sErr',scrim); e.textContent='Zadej celá čísla 0–99.'; e.hidden=false; return; }
+    if (total && sa+sbv!==total) { const e=$('#sErr',scrim); e.textContent=`Součet musí být ${total}.`; e.hidden=false; return; }
+    save(sa, sbv);
+  };
+  const cl = $('[data-clear]', scrim); if (cl) cl.onclick = () => save(null, null);
+}
+
+function renderStandings(){
+  const rows = Engine.standings(state.t.players.length, state.matches);
+  const any = state.matches.some(isDone);
+  $('#pane').innerHTML = `
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>#</th><th class="name">Hráč</th><th title="Odehrané zápasy">Z</th><th title="Výhry">V</th><th title="Rozdíl míčů">+/−</th><th style="padding-right:14px">Body</th></tr></thead>
+      <tbody>${rows.map((r,k)=>`<tr class="${k===0&&any?'top1':''}">
+        <td class="rank"><span>${k+1}</span></td>
+        <td class="name">${nameHtml(r.i)}</td>
+        <td>${r.mp}</td><td>${r.w}</td><td>${r.pf-r.pa>0?'+':''}${r.pf-r.pa}</td>
+        <td class="pts num">${r.pts}</td></tr>`).join('')}</tbody>
+    </table></div>
+    <p class="hint">Body = součet uhraných míčů. Při shodě rozhoduje rozdíl míčů, pak počet výher.${state.t.players.length%4 ? ' Kdo měl víc pauz, má odehraných méně zápasů – sleduj sloupec Z.' : ''}</p>`;
+}
+
+function renderShare(){
+  const t = state.t, url = playerUrl(t.code);
+  const wa = `https://wa.me/?text=${encodeURIComponent(`${t.name}\nRozpis, zápis skóre a pořadí:\n${url}`)}`;
+  $('#pane').innerHTML = `<div class="stack">
+    <section class="card stack">
+      <div><p class="eyebrow">Odkaz pro hráče</p><h3>Pošli do skupiny, skóre si zapíšou sami</h3></div>
+      <div class="linkbox"><input class="in" id="lnk" readonly value="${esc(url)}"><button class="btn" id="cp">Kopírovat</button></div>
+      <a class="btn wa block" href="${wa}" target="_blank" rel="noopener">Poslat přes WhatsApp</a>
+      <p class="hint" style="margin:0">Nebo kód turnaje: <b class="num" style="font-size:17px;letter-spacing:.12em">${t.code}</b></p>
+    </section>
+    <section class="card stack">
+      <h3>Kdo jsem já</h3>
+      <p class="hint" style="margin:0">Zvýrazní tvoje zápasy a řádek v pořadí (jen na tomhle telefonu).</p>
+      <select class="in" id="meSel"><option value="">— nikdo —</option>${t.players.map((p,i)=>`<option value="${i}" ${state.me===i?'selected':''}>${esc(p)}</option>`).join('')}</select>
+    </section>
+    ${state.admin ? adminPanel() : ''}
+  </div>`;
+  $('#cp').onclick = () => copy(url);
+  $('#meSel').onchange = e => { state.me = e.target.value==='' ? null : +e.target.value; store.set('turnaje.me.'+t.code, state.me); toast('Uloženo'); };
+  if (state.admin) bindAdmin();
+}
+function adminPanel(){
+  const rs = roundsList(), last = rs[rs.length-1];
+  return `<section class="card stack">
+    <div><p class="eyebrow">Organizátor</p><h3>Správa turnaje</h3></div>
+    <div class="row">
+      <button class="btn" id="addR">+ Přidat ${ (last||0)+1 }. kolo</button>
+      ${last ? `<button class="btn danger" id="delR">Smazat ${last}. kolo</button>` : ''}
+    </div>
+    <div id="delConfirm" hidden class="card" style="background:var(--surface-2)">
+      <p style="margin:0 0 10px">Opravdu smazat ${last}. kolo včetně zapsaného skóre?</p>
+      <div class="row"><button class="btn danger" id="delYes">Ano, smazat</button><button class="btn" id="delNo">Ne</button></div>
+    </div>
+    <details><summary style="cursor:pointer;font-weight:600">Přejmenovat hráče</summary>
+      <div class="stack" style="margin-top:10px">${state.t.players.map((p,i)=>`<div class="linkbox"><input class="in" id="rn${i}" value="${esc(p)}" maxlength="40"><button class="btn" data-rn="${i}">Uložit</button></div>`).join('')}</div>
+    </details>
+    <details><summary style="cursor:pointer;font-weight:600">Odkaz pro spoluorganizátora</summary>
+      <p class="hint">S tímhle odkazem jde losovat a mazat kola. Neposílej ho do skupiny.</p>
+      <div class="linkbox"><input class="in" readonly value="${esc(adminUrl(state.t.code, state.admin))}"><button class="btn" id="cpA">Kopírovat</button></div>
+    </details>
+  </section>`;
+}
+function bindAdmin(){
+  $('#addR').onclick = e => addRound(e.currentTarget);
+  const del = $('#delR');
+  if (del) {
+    del.onclick = () => $('#delConfirm').hidden = false;
+    $('#delNo').onclick = () => $('#delConfirm').hidden = true;
+    $('#delYes').onclick = async () => {
+      const rs = roundsList(); const last = rs[rs.length-1];
+      const {error} = await sb.rpc('turnaj_delete_round', {p_code:state.t.code, p_token:state.admin, p_round:last});
+      if (error) return toast('Chyba: '+error.message);
+      await loadMatches(); toast(`${last}. kolo smazáno`); render();
+    };
+  }
+  document.querySelectorAll('[data-rn]').forEach(b => b.onclick = async () => {
+    const i = +b.dataset.rn, v = $('#rn'+i).value.trim(); if (!v) return;
+    const {error} = await sb.rpc('turnaj_rename_player', {p_code:state.t.code, p_token:state.admin, p_idx:i, p_name:v});
+    if (error) return toast('Chyba: '+error.message);
+    await reloadTournament(); toast('Přejmenováno'); render();
+  });
+  $('#cpA').onclick = () => copy(adminUrl(state.t.code, state.admin));
+}
+async function addRound(btn){
+  const t = state.t, n = t.players.length, rs = roundsList(), next = (rs[rs.length-1]||0)+1;
+  let ms;
+  if (t.format==='mexicano') {
+    const order = Engine.standings(n, state.matches).map(r=>r.i);
+    ms = Engine.mexicanoRound(n, t.courts, state.matches, next, order);
+  } else ms = Engine.americanoRound(n, t.courts, state.matches, next);
+  btn.disabled = true;
+  const {error} = await sb.rpc('turnaj_add_matches', {p_code:t.code, p_token:state.admin, p_matches:ms});
+  btn.disabled = false;
+  if (error) return toast('Chyba: '+error.message);
+  await loadMatches(); state.round = next; state.tab='zapasy'; toast(`${next}. kolo vylosováno`); render();
+}
+</script>
+</body>
+</html>
