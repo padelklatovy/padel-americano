@@ -78,7 +78,7 @@ label.f small{font-weight:400;color:var(--ink-2)}
 input.in,select.in,textarea.in{font-weight:400;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:11px 12px;width:100%;min-height:44px}
 textarea.in{min-height:190px;resize:vertical;line-height:1.5}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.seg{display:grid;grid-template-columns:1fr 1fr;background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:4px;gap:4px}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:4px;gap:4px}
 .seg button{border:0;background:transparent;border-radius:9px;padding:10px 8px;cursor:pointer;text-align:left;display:flex;flex-direction:column;gap:2px}
 .seg button b{font:700 18px/1.1 "Barlow Condensed",sans-serif}
 .seg button span{font-size:12.5px;font-weight:400;color:var(--ink-2);line-height:1.3}
@@ -130,7 +130,23 @@ textarea.in{min-height:190px;resize:vertical;line-height:1.5}
 .round-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:10px}
 @media (max-width:420px){.round-grid{grid-template-columns:1fr}}
 .round.current .match{border-color:color-mix(in srgb,var(--court-2) 45%,var(--line))}
+.hint.auto{padding:10px 12px;border:1px dashed var(--line);border-radius:12px;margin:0}
+.finish{border-color:var(--court-2)}
 .jump{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:15;border:0;background:var(--ink);color:var(--ground);border-radius:999px;padding:10px 16px;font-weight:600;cursor:pointer;box-shadow:var(--shadow)}
+
+/* players (drop-in) */
+.plist{display:flex;flex-direction:column}
+.prow{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
+.prow:last-child{border-bottom:0}
+.prow .nm{flex:1;min-width:0;font-weight:600}
+.prow.off .nm{color:var(--ink-2);font-weight:500}
+.tog{border:1px solid var(--line);background:var(--surface-2);border-radius:999px;padding:6px 12px;font-weight:600;font-size:13px;cursor:pointer;min-height:34px;white-space:nowrap}
+.tog.on{background:color-mix(in srgb,var(--win) 14%,var(--surface));border-color:color-mix(in srgb,var(--win) 45%,var(--line));color:var(--win)}
+.mecard{display:flex;align-items:center;gap:12px;justify-content:space-between;flex-wrap:wrap}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--win);display:inline-block;margin-right:6px}
+.dot.off{background:var(--ink-2);opacity:.5}
+td.left{color:var(--ink-2)}
+@media (max-width:420px){.seg{grid-template-columns:1fr}}
 
 /* table */
 .tbl-wrap{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius)}
@@ -152,11 +168,12 @@ th:first-child,td:first-child{padding-left:12px}
 @media (min-width:600px){.scrim{align-items:center}.sheet{border-radius:20px}}
 .sheet-head{display:flex;justify-content:space-between;align-items:center}
 .pad{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.side{background:var(--surface-2);border:1px solid var(--line);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:10px;align-items:stretch}
+.side{background:var(--surface-2);border:1px solid var(--line);border-radius:14px;padding:10px;min-width:0;display:flex;flex-direction:column;gap:10px;align-items:stretch}
 .side .who{font-weight:600;font-size:14.5px;line-height:1.3;min-height:38px}
-.stepper{display:grid;grid-template-columns:44px 1fr 44px;align-items:center;gap:6px}
+.stepper{display:grid;grid-template-columns:40px minmax(0,1fr) 40px;align-items:center;gap:4px}
 .stepper button{height:44px;border-radius:10px;border:1px solid var(--line);background:var(--surface);font:700 22px/1 "Barlow",sans-serif;cursor:pointer}
-.stepper input{text-align:center;font:700 44px/1 "Barlow Condensed",sans-serif;font-variant-numeric:tabular-nums;border:0;background:transparent;width:100%;padding:0;min-width:0}
+.stepper input{text-align:center;font:700 clamp(30px,9vw,44px)/1 "Barlow Condensed",sans-serif;-moz-appearance:textfield;font-variant-numeric:tabular-nums;border:0;background:transparent;width:100%;padding:0;min-width:0}
+.stepper input::-webkit-inner-spin-button,.stepper input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
 .quick{display:flex;gap:6px;flex-wrap:wrap}
 .quick button{flex:1 0 44px;min-height:38px;border-radius:9px;border:1px solid var(--line);background:var(--surface-2);font:600 16px/1 "Barlow Condensed",sans-serif;cursor:pointer}
 .hint{font-size:13px;color:var(--ink-2)}
@@ -180,7 +197,7 @@ th:first-child,td:first-child{padding-left:12px}
 <header class="bar">
   <div class="bar-in">
     <a class="brand" href="./" aria-label="Padel Klatovy – turnaje"><svg class="logo" xmlns="http://www.w3.org/2000/svg" viewBox="214 346 166 150" role="img" aria-label="Padel Klatovy"> <path fill-rule="nonzero" class="lk" d="M 268.40 454.41 L 257.78 454.41 L 253.00 478.32 L 261.06 478.32 L 262.22 472.44 L 266.35 472.44 C 273.69 472.44 278.44 468.38 278.44 462.33 C 278.44 457.35 274.82 454.41 268.40 454.41 Z M 266.76 466.23 L 263.45 466.23 L 264.58 460.62 L 267.28 460.62 C 269.12 460.62 270.28 461.34 270.28 463.05 C 270.28 465.07 268.98 466.23 266.76 466.23 "/> <path fill-rule="nonzero" class="lk" d="M 296.58 478.32 L 304.60 478.32 L 298.93 454.41 L 291.01 454.41 L 275.78 478.32 L 284.28 478.32 L 286.67 474.15 L 295.79 474.15 Z M 289.99 468.34 L 293.50 462.23 L 294.67 468.34 Z M 289.99 468.34 "/> <path fill-rule="nonzero" class="lk" d="M 305.90 478.32 L 318.71 478.32 C 327.42 478.32 333.67 472.99 333.67 464.55 C 333.67 458.27 329.02 454.41 321.48 454.41 L 310.68 454.41 Z M 315.23 472.03 L 317.48 460.69 L 320.55 460.69 C 323.80 460.69 325.54 462.26 325.54 465.03 C 325.54 468.96 323.25 472.03 318.98 472.03 Z M 315.23 472.03 "/> <path fill-rule="nonzero" class="lk" d="M 357.10 460.49 L 358.32 454.41 L 338.89 454.41 L 334.11 478.32 L 353.99 478.32 L 355.22 472.24 L 343.23 472.24 L 343.84 469.09 L 353.99 469.09 L 355.15 463.29 L 345.04 463.29 L 345.58 460.49 Z M 357.10 460.49 "/> <path fill-rule="nonzero" class="lk" d="M 357.10 478.32 L 375.95 478.32 L 377.21 472.07 L 366.42 472.07 L 369.94 454.41 L 361.88 454.41 Z M 357.10 478.32 "/> <path fill-rule="nonzero" class="lr" d="M 260.02 485.12 L 257.37 485.12 L 253.78 488.37 L 254.42 485.12 L 252.21 485.12 L 250.62 493.08 L 252.83 493.08 L 253.22 491.15 L 254.25 490.21 L 256.08 493.08 L 258.60 493.08 L 255.93 488.78 Z M 260.02 485.12 "/> <path fill-rule="nonzero" class="lr" d="M 259.17 493.08 L 265.22 493.08 L 265.58 491.30 L 261.78 491.30 L 263.01 485.12 L 260.76 485.12 Z M 259.17 493.08 "/> <path fill-rule="nonzero" class="lr" d="M 272.25 493.08 L 274.49 493.08 L 272.57 485.12 L 270.35 485.12 L 265.25 493.08 L 267.62 493.08 L 268.54 491.53 L 271.93 491.53 Z M 269.53 489.87 L 271.06 487.29 L 271.59 489.87 Z M 269.53 489.87 "/> <path fill-rule="nonzero" class="lr" d="M 276.42 493.08 L 278.68 493.08 L 279.92 486.91 L 282.35 486.91 L 282.72 485.12 L 275.58 485.12 L 275.22 486.91 L 277.67 486.91 Z M 276.42 493.08 "/> <path fill-rule="nonzero" class="lr" d="M 286.15 493.24 C 289.08 493.24 291.12 491.23 291.12 488.46 C 291.12 486.40 289.61 484.96 287.16 484.96 C 284.24 484.96 282.19 486.97 282.19 489.74 C 282.19 491.80 283.71 493.24 286.15 493.24 Z M 286.35 491.37 C 285.15 491.37 284.47 490.66 284.47 489.60 C 284.47 488.10 285.41 486.82 286.97 486.82 C 288.17 486.82 288.85 487.54 288.85 488.60 C 288.85 490.10 287.91 491.37 286.35 491.37 "/> <path fill-rule="nonzero" class="lr" d="M 298.54 485.12 L 295.29 490.29 L 294.15 485.12 L 291.84 485.12 L 293.65 493.08 L 295.87 493.08 L 300.86 485.12 Z M 298.54 485.12 "/> <path fill-rule="nonzero" class="lr" d="M 308.51 485.12 L 306.22 485.12 L 303.67 488.29 L 302.42 485.12 L 300.16 485.12 L 302.18 490.20 L 301.61 493.08 L 303.86 493.08 L 304.42 490.26 Z M 308.51 485.12 "/> <path fill-rule="evenodd" class="lr" d="M 296.16 435.52 C 298.17 434.85 300 434.16 301.71 433.39 C 303.43 432.61 305.04 431.76 306.64 430.77 C 308.23 429.79 309.82 428.67 311.35 427.45 C 312.87 426.24 314.33 424.93 315.67 423.57 C 317.02 422.21 318.26 420.80 319.39 419.33 C 320.51 417.87 321.54 416.35 322.47 414.78 C 323.41 413.20 324.25 411.58 325.01 409.87 C 325.77 408.17 326.46 406.39 327.09 404.51 C 327.73 402.59 328.30 400.57 328.79 398.51 C 329.25 396.55 329.63 394.56 329.89 392.63 C 330.16 390.65 330.30 388.73 330.34 386.82 C 330.39 384.91 330.32 383.00 330.16 381.05 C 329.99 378.99 329.71 376.88 329.30 374.85 C 328.94 373.04 328.47 371.28 327.87 369.64 C 327.23 367.92 326.45 366.34 325.53 364.87 C 324.60 363.41 323.54 362.05 322.34 360.78 C 321.14 359.5 319.81 358.30 318.35 357.19 C 316.91 356.09 315.34 355.08 313.67 354.18 C 312.01 353.28 310.24 352.49 308.42 351.81 C 306.56 351.12 304.64 350.55 302.72 350.10 C 300.81 349.66 298.90 349.35 296.17 349.12 C 293.42 348.88 289.86 348.73 284.68 348.60 C 274.34 348.47 257.41 348.69 240.55 348.58 L 216.93 482.10 L 251.72 446.19 C 258.33 439.79 258.33 439.78 259.73 439.90 C 261.02 440.01 263.58 440.22 267.58 440.14 C 269.73 440.10 272.30 439.97 275.03 439.74 C 277.37 439.53 279.82 439.26 282.18 438.89 C 284.64 438.50 287.01 438.02 289.27 437.48 C 291.73 436.89 294.04 436.22 296.16 435.52 "/> <path fill-rule="evenodd" fill="#fff" d="M 259.14 371.73 C 260.37 371.73 261.31 372.73 261.24 373.96 C 261.17 375.19 260.12 376.19 258.89 376.19 C 257.66 376.19 256.71 375.19 256.78 373.96 C 256.85 372.73 257.90 371.73 259.14 371.73 "/> <path fill-rule="evenodd" fill="#fff" d="M 258.14 377.60 C 259.37 377.60 260.31 378.60 260.25 379.83 C 260.17 381.07 259.12 382.07 257.89 382.07 C 256.66 382.07 255.71 381.07 255.78 379.83 C 255.85 378.60 256.91 377.60 258.14 377.60 "/> <path fill-rule="evenodd" fill="#fff" d="M 257.14 383.48 C 258.37 383.48 259.31 384.48 259.25 385.71 C 259.18 386.94 258.12 387.94 256.89 387.94 C 255.66 387.94 254.72 386.94 254.78 385.71 C 254.85 384.48 255.91 383.48 257.14 383.48 "/> <path fill-rule="evenodd" fill="#fff" d="M 256.14 389.35 C 257.37 389.35 258.31 390.35 258.25 391.58 C 258.18 392.82 257.12 393.81 255.89 393.81 C 254.66 393.81 253.72 392.82 253.78 391.58 C 253.85 390.35 254.91 389.35 256.14 389.35 "/> <path fill-rule="evenodd" fill="#fff" d="M 255.14 395.23 C 256.37 395.23 257.32 396.23 257.25 397.46 C 257.18 398.69 256.12 399.69 254.89 399.69 C 253.66 399.69 252.72 398.69 252.78 397.46 C 252.85 396.23 253.91 395.23 255.14 395.23 "/> <path fill-rule="evenodd" fill="#fff" d="M 254.14 401.10 C 255.37 401.10 256.32 402.10 256.25 403.33 C 256.18 404.56 255.13 405.56 253.89 405.56 C 252.66 405.56 251.72 404.56 251.79 403.33 C 251.85 402.10 252.91 401.10 254.14 401.10 "/> <path fill-rule="evenodd" fill="#fff" d="M 253.14 406.97 C 254.37 406.97 255.32 407.97 255.25 409.20 C 255.18 410.44 254.13 411.43 252.90 411.43 C 251.66 411.43 250.72 410.44 250.79 409.20 C 250.85 407.97 251.91 406.97 253.14 406.97 "/> <path fill-rule="evenodd" fill="#fff" d="M 252.14 412.85 C 253.37 412.85 254.32 413.85 254.25 415.08 C 254.18 416.31 253.13 417.31 251.90 417.31 C 250.67 417.31 249.72 416.31 249.79 415.08 C 249.85 413.85 250.91 412.85 252.14 412.85 "/> <path fill-rule="evenodd" fill="#fff" d="M 267.78 365.86 C 269.01 365.86 269.95 366.85 269.89 368.09 C 269.82 369.32 268.76 370.32 267.53 370.32 C 266.30 370.32 265.36 369.32 265.42 368.09 C 265.49 366.85 266.55 365.86 267.78 365.86 "/> <path fill-rule="evenodd" fill="#fff" d="M 266.78 371.73 C 268.01 371.73 268.95 372.73 268.89 373.96 C 268.82 375.19 267.76 376.19 266.53 376.19 C 265.30 376.19 264.36 375.19 264.42 373.96 C 264.49 372.73 265.55 371.73 266.78 371.73 "/> <path fill-rule="evenodd" fill="#fff" d="M 265.78 377.60 C 267.01 377.60 267.96 378.60 267.89 379.83 C 267.82 381.07 266.77 382.07 265.53 382.07 C 264.30 382.07 263.36 381.07 263.42 379.83 C 263.5 378.60 264.55 377.60 265.78 377.60 "/> <path fill-rule="evenodd" fill="#fff" d="M 264.78 383.48 C 266.01 383.48 266.96 384.48 266.89 385.71 C 266.82 386.94 265.77 387.94 264.53 387.94 C 263.30 387.94 262.36 386.94 262.43 385.71 C 262.5 384.48 263.55 383.48 264.78 383.48 "/> <path fill-rule="evenodd" fill="#fff" d="M 263.78 389.35 C 265.01 389.35 265.96 390.35 265.89 391.58 C 265.82 392.82 264.77 393.81 263.54 393.81 C 262.30 393.81 261.36 392.82 261.43 391.58 C 261.5 390.35 262.55 389.35 263.78 389.35 "/> <path fill-rule="evenodd" fill="#fff" d="M 262.78 395.23 C 264.01 395.23 264.96 396.23 264.89 397.46 C 264.82 398.69 263.77 399.69 262.54 399.69 C 261.31 399.69 260.36 398.69 260.43 397.46 C 260.5 396.23 261.55 395.23 262.78 395.23 "/> <path fill-rule="evenodd" fill="#fff" d="M 261.78 401.10 C 263.01 401.10 263.96 402.10 263.89 403.33 C 263.82 404.56 262.77 405.56 261.54 405.56 C 260.31 405.56 259.36 404.56 259.43 403.33 C 259.50 402.10 260.55 401.10 261.78 401.10 "/> <path fill-rule="evenodd" fill="#fff" d="M 260.78 406.97 C 262.01 406.97 262.96 407.97 262.89 409.20 C 262.82 410.44 261.77 411.43 260.54 411.43 C 259.31 411.43 258.36 410.44 258.43 409.20 C 258.50 407.97 259.55 406.97 260.78 406.97 "/> <path fill-rule="evenodd" fill="#fff" d="M 272.42 383.48 C 273.66 383.48 274.60 384.48 274.53 385.71 C 274.46 386.94 273.41 387.94 272.18 387.94 C 270.95 387.94 270.00 386.94 270.07 385.71 C 270.14 384.48 271.19 383.48 272.42 383.48 "/> <path fill-rule="evenodd" fill="#fff" d="M 271.42 389.35 C 272.66 389.35 273.60 390.35 273.53 391.58 C 273.46 392.82 272.41 393.81 271.18 393.81 C 269.95 393.81 269.01 392.82 269.07 391.58 C 269.14 390.35 270.19 389.35 271.42 389.35 "/> <path fill-rule="evenodd" fill="#fff" d="M 270.42 395.23 C 271.66 395.23 272.60 396.23 272.53 397.46 C 272.47 398.69 271.41 399.69 270.18 399.69 C 268.95 399.69 268.01 398.69 268.07 397.46 C 268.14 396.23 269.19 395.23 270.42 395.23 "/> <path fill-rule="evenodd" fill="#fff" d="M 269.43 401.10 C 270.66 401.10 271.60 402.10 271.53 403.33 C 271.47 404.56 270.41 405.56 269.18 405.56 C 267.95 405.56 267.01 404.56 267.07 403.33 C 267.14 402.10 268.19 401.10 269.43 401.10 "/> <path fill-rule="evenodd" fill="#fff" d="M 281.07 377.60 C 282.30 377.60 283.24 378.60 283.17 379.83 C 283.11 381.07 282.05 382.07 280.82 382.07 C 279.59 382.07 278.65 381.07 278.71 379.83 C 278.78 378.60 279.83 377.60 281.07 377.60 "/> <path fill-rule="evenodd" fill="#fff" d="M 280.07 383.48 C 281.30 383.48 282.25 384.48 282.17 385.71 C 282.11 386.94 281.05 387.94 279.82 387.94 C 278.59 387.94 277.65 386.94 277.71 385.71 C 277.78 384.48 278.83 383.48 280.07 383.48 "/> <path fill-rule="evenodd" fill="#fff" d="M 279.07 389.35 C 280.30 389.35 281.25 390.35 281.18 391.58 C 281.11 392.82 280.06 393.81 278.82 393.81 C 277.59 393.81 276.65 392.82 276.72 391.58 C 276.78 390.35 277.83 389.35 279.07 389.35 "/> <path fill-rule="evenodd" fill="#fff" d="M 278.07 395.23 C 279.30 395.23 280.25 396.23 280.18 397.46 C 280.11 398.69 279.06 399.69 277.83 399.69 C 276.59 399.69 275.65 398.69 275.72 397.46 C 275.78 396.23 276.84 395.23 278.07 395.23 "/> <path fill-rule="evenodd" fill="#fff" d="M 277.07 401.10 C 278.30 401.10 279.25 402.10 279.18 403.33 C 279.11 404.56 278.06 405.56 276.83 405.56 C 275.59 405.56 274.65 404.56 274.72 403.33 C 274.78 402.10 275.84 401.10 277.07 401.10 "/> <path fill-rule="evenodd" fill="#fff" d="M 276.07 406.97 C 277.30 406.97 278.25 407.97 278.18 409.20 C 278.11 410.44 277.06 411.43 275.83 411.43 C 274.60 411.43 273.65 410.44 273.72 409.20 C 273.79 407.97 274.84 406.97 276.07 406.97 "/> <path fill-rule="evenodd" fill="#fff" d="M 289.71 371.73 C 290.94 371.73 291.89 372.73 291.82 373.96 C 291.75 375.19 290.70 376.19 289.46 376.19 C 288.23 376.19 287.29 375.19 287.36 373.96 C 287.42 372.73 288.48 371.73 289.71 371.73 "/> <path fill-rule="evenodd" fill="#fff" d="M 288.71 377.60 C 289.94 377.60 290.89 378.60 290.82 379.83 C 290.75 381.07 289.70 382.07 288.47 382.07 C 287.23 382.07 286.29 381.07 286.36 379.83 C 286.42 378.60 287.48 377.60 288.71 377.60 "/> <path fill-rule="evenodd" fill="#fff" d="M 287.71 383.48 C 288.94 383.48 289.89 384.48 289.82 385.71 C 289.75 386.94 288.70 387.94 287.47 387.94 C 286.24 387.94 285.29 386.94 285.36 385.71 C 285.42 384.48 286.48 383.48 287.71 383.48 "/> <path fill-rule="evenodd" fill="#fff" d="M 284.71 401.10 C 285.94 401.10 286.89 402.10 286.82 403.33 C 286.76 404.56 285.70 405.56 284.47 405.56 C 283.24 405.56 282.30 404.56 282.36 403.33 C 282.43 402.10 283.48 401.10 284.71 401.10 "/> <path fill-rule="evenodd" fill="#fff" d="M 283.71 406.97 C 284.95 406.97 285.89 407.97 285.82 409.20 C 285.76 410.44 284.70 411.43 283.47 411.43 C 282.24 411.43 281.30 410.44 281.36 409.20 C 281.43 407.97 282.48 406.97 283.71 406.97 "/> <path fill-rule="evenodd" fill="#fff" d="M 282.72 412.85 C 283.95 412.85 284.89 413.85 284.82 415.08 C 284.76 416.31 283.70 417.31 282.47 417.31 C 281.24 417.31 280.30 416.31 280.36 415.08 C 280.43 413.85 281.48 412.85 282.72 412.85 "/> <path fill-rule="evenodd" fill="#fff" d="M 298.35 365.86 C 299.58 365.86 300.53 366.85 300.46 368.09 C 300.39 369.32 299.34 370.32 298.11 370.32 C 296.88 370.32 295.93 369.32 296.00 368.09 C 296.07 366.85 297.12 365.86 298.35 365.86 "/> <path fill-rule="evenodd" fill="#fff" d="M 297.35 371.73 C 298.58 371.73 299.53 372.73 299.46 373.96 C 299.39 375.19 298.34 376.19 297.11 376.19 C 295.88 376.19 294.93 375.19 295.00 373.96 C 295.07 372.73 296.12 371.73 297.35 371.73 "/> <path fill-rule="evenodd" fill="#fff" d="M 296.35 377.60 C 297.58 377.60 298.53 378.60 298.46 379.83 C 298.39 381.07 297.34 382.07 296.11 382.07 C 294.88 382.07 293.93 381.07 294.00 379.83 C 294.07 378.60 295.12 377.60 296.35 377.60 "/> <path fill-rule="evenodd" fill="#fff" d="M 291.36 406.97 C 292.59 406.97 293.53 407.97 293.47 409.20 C 293.40 410.44 292.35 411.43 291.12 411.43 C 289.88 411.43 288.94 410.44 289.01 409.20 C 289.07 407.97 290.13 406.97 291.36 406.97 "/> <path fill-rule="evenodd" fill="#fff" d="M 290.36 412.85 C 291.59 412.85 292.53 413.85 292.47 415.08 C 292.40 416.31 291.35 417.31 290.12 417.31 C 288.89 417.31 287.94 416.31 288.01 415.08 C 288.07 413.85 289.13 412.85 290.36 412.85 "/> </svg> </a>
-    <div class="bar-title"><small id="barSub">Turnaje</small><span class="brand-name" id="barTitle">Americano &amp; Mexicano</span></div>
+    <div class="bar-title"><small id="barSub">Turnaje</small><span class="brand-name" id="barTitle">Americano · Mexicano · Drop-in</span></div>
     <span class="spacer"></span>
     <button class="share-btn" id="barShare" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg><span>Sdílet</span></button>
   </div>
@@ -265,7 +282,7 @@ const Engine = (() => {
     }
     return ms;
   }
-  function standings(n, matches) {
+  function standings(n, matches, avg=false) {
     const rows = Array.from({length:n}, (_,i)=>({i, pts:0, pf:0, pa:0, w:0, d:0, l:0, mp:0}));
     for (const m of matches) {
       if (m.score_a==null || m.score_b==null) continue;
@@ -275,7 +292,10 @@ const Engine = (() => {
         if (f>a) r.w++; else if (f<a) r.l++; else r.d++;
       }
     }
-    rows.sort((x,y) => (y.pts-x.pts) || ((y.pf-y.pa)-(x.pf-x.pa)) || (y.w-x.w) || (x.i-y.i));
+    if (avg) {
+      for (const r of rows) { r.avg = r.mp ? r.pts/r.mp : null; r.avgd = r.mp ? (r.pf-r.pa)/r.mp : null; }
+      rows.sort((x,y) => ((y.mp>0)-(x.mp>0)) || ((y.avg??0)-(x.avg??0)) || ((y.avgd??0)-(x.avgd??0)) || ((y.mp?y.w/y.mp:0)-(x.mp?x.w/x.mp:0)) || (x.i-y.i));
+    } else rows.sort((x,y) => (y.pts-x.pts) || ((y.pf-y.pa)-(x.pf-x.pa)) || (y.w-x.w) || (x.i-y.i));
     return rows;
   }
   function defaultRounds(n, courts) {
@@ -318,7 +338,7 @@ if (code) openTournament(code, keyParam); else renderHome();
 /* ====== Domů / nový turnaj ====== */
 function renderHome(){
   document.title = 'Turnaje · Padel Klatovy';
-  $('#barTitle').textContent = 'Americano & Mexicano'; $('#barSub').textContent = 'Turnaje'; $('#barShare').hidden = true;
+  $('#barTitle').textContent = 'Americano · Mexicano · Drop-in'; $('#barSub').textContent = 'Turnaje'; $('#barShare').hidden = true;
   const mine = store.get('turnaje.mine', []);
   const form = store.get('turnaje.draft', {name:'', format:'americano', points:24, courts:2, players:'', rounds:null});
   $('#app').innerHTML = `
@@ -331,6 +351,7 @@ function renderHome(){
         <div class="seg" role="group" aria-label="Formát">
           <button type="button" data-fmt="americano" aria-pressed="${form.format==='americano'}"><b>Americano</b><span>Předem rozlosované kolo po kole, partneři se střídají</span></button>
           <button type="button" data-fmt="mexicano" aria-pressed="${form.format==='mexicano'}"><b>Mexicano</b><span>Každé další kolo podle pořadí: 1.+4. proti 2.+3.</span></button>
+          <button type="button" data-fmt="dropin" aria-pressed="${form.format==='dropin'}"><b>Drop-in</b><span>Mexicano, kde lidi průběžně přicházejí a odcházejí</span></button>
         </div>
       </div>
       <div class="grid2">
@@ -339,10 +360,10 @@ function renderHome(){
         <label class="f">Počet kurtů<small>Kolik zápasů běží naráz.</small>
           <select class="in" id="fCourts">${[1,2,3,4,5,6,8].map(c=>`<option ${+form.courts===c?'selected':''}>${c}</option>`).join('')}</select></label>
       </div>
-      <label class="f">Hráči<small>Jeden na řádek (nebo oddělené čárkou). Min. 4. Když počet není násobek 4, hráči se střídají na pauze.</small>
+      <label class="f">Hráči<small id="playersHint">Jeden na řádek (nebo oddělené čárkou). Min. 4. Když počet není násobek 4, hráči se střídají na pauze.</small>
         <textarea class="in" id="fPlayers" placeholder="Karel&#10;Štefan&#10;Martin&#10;Pavel&#10;…">${esc(form.players)}</textarea></label>
-      <label class="f" id="roundsWrap">Počet kol<small id="roundsHint"></small>
-        <input class="in num" id="fRounds" type="number" inputmode="numeric" min="1" max="30"></label>
+      <label class="f" id="roundsWrap"><span id="roundsLbl">Počet kol</span><small id="roundsHint"></small>
+        <input class="in num" id="fRounds" type="number" inputmode="numeric" min="0" max="30"></label>
       <p class="err" id="fErr" hidden></p>
       <button class="btn primary block" id="fCreate">Rozlosovat a vytvořit</button>
     </section>
@@ -353,18 +374,22 @@ function renderHome(){
     </section>
 
     ${mine.length ? `<section class="card"><h3 style="margin-bottom:4px">Moje turnaje</h3>${mine.slice(0,12).map(m=>`
-      <a class="list-item" href="?t=${esc(m.code)}"><span><b>${esc(m.name)}</b><br><span class="muted" style="font-size:13px">${m.format==='mexicano'?'Mexicano':'Americano'} · ${new Date(m.created).toLocaleDateString('cs-CZ')}</span></span><span class="pill-code" style="background:var(--surface-2)">${esc(m.code)}</span></a>`).join('')}</section>` : ''}
+      <a class="list-item" href="?t=${esc(m.code)}"><span><b>${esc(m.name)}</b><br><span class="muted" style="font-size:13px">${fmtName(m.format)} · ${new Date(m.created).toLocaleDateString('cs-CZ')}</span></span><span class="pill-code" style="background:var(--surface-2)">${esc(m.code)}</span></a>`).join('')}</section>` : ''}
   </div>`;
   let fmt = form.format;
   const players = () => $('#fPlayers').value.split(/[\n,;]+/).map(s=>s.trim()).filter(Boolean);
   const upd = () => {
     const n = players().length, c = +$('#fCourts').value;
-    $('#roundsWrap').hidden = fmt !== 'americano';
+    $('#roundsLbl').textContent = fmt==='americano' ? 'Počet kol' : 'Počet kol (0 = bez omezení)';
+    $('#playersHint').textContent = fmt==='dropin'
+      ? 'Kdo je na startu (min. 4). Další se přidají sami přes odkaz, kdykoli během hry.'
+      : 'Jeden na řádek (nebo oddělené čárkou). Min. 4. Když počet není násobek 4, hráči se střídají na pauze.';
+    if (fmt==='dropin' && !$('#fRounds').dataset.touched) $('#fRounds').value = 0;
     const def = Engine.defaultRounds(n, c);
-    if (!$('#fRounds').dataset.touched) $('#fRounds').value = def || '';
+    if (!$('#fRounds').dataset.touched && fmt!=='dropin') $('#fRounds').value = def || '';
     const playing = Math.min(c, Math.floor(n/4))*4;
     $('#roundsHint').textContent = n>=4
-      ? `${n} hráčů, ${playing/4} ${playing/4===1?'kurt':'kurty'} naráz${n>playing?`, ${n-playing} na pauze každé kolo`:''}. Doporučeno ${def} kol. Další kola jde přidat i později.`
+      ? `${n} hráčů, ${playing/4} ${playing/4===1?'kurt':'kurty'} naráz${n>playing?`, ${n-playing} na pauze každé kolo`:''}. ${fmt==='dropin' ? 'Hraje se, dokud chcete – 0 = bez omezení.' : `Doporučeno ${def} kol.`}${fmt!=='americano' ? ' Každé další kolo se vylosuje samo, jakmile je zapsaný poslední výsledek.' : ' Další kola jde přidat i později.'}`
       : 'Zadej aspoň 4 hráče.';
     store.set('turnaje.draft', {name:$('#fName').value, format:fmt, points:+$('#fPoints').value, courts:c, players:$('#fPlayers').value});
   };
@@ -382,10 +407,11 @@ function renderHome(){
     if (ps.length>64) { err.textContent='Maximálně 64 hráčů.'; err.hidden=false; return; }
     if (dup) { err.textContent=`Jméno „${dup}“ je tam dvakrát – přidej třeba příjmení.`; err.hidden=false; return; }
     const courts = +$('#fCourts').value, points = +$('#fPoints').value;
-    const rounds = Math.max(1, Math.min(30, +$('#fRounds').value || Engine.defaultRounds(ps.length, courts)));
-    const matches = fmt==='americano' ? Engine.americanoSchedule(ps.length, courts, rounds) : Engine.mexicanoRound(ps.length, courts, [], 1, null);
+    const rv = $('#fRounds').value.trim();
+    const rounds = fmt!=='americano' && rv==='0' ? 0 : Math.max(1, Math.min(30, +rv || Engine.defaultRounds(ps.length, courts)));
+    const matches = fmt==='americano' ? Engine.americanoSchedule(ps.length, courts, rounds) : [];
     $('#fCreate').disabled = true; $('#fCreate').textContent = 'Losuji…';
-    const {data, error} = await sb.rpc('turnaj_create', {p_name:name, p_format:fmt, p_points:points, p_courts:courts, p_players:ps.map(p=>p.slice(0,40)), p_matches:matches});
+    const {data, error} = await sb.rpc('turnaj_create', {p_name:name, p_format:fmt==='dropin'?'mexicano':fmt, p_points:points, p_courts:courts, p_players:ps.map(p=>p.slice(0,40)), p_matches:matches, p_max_rounds:rounds||null, p_dropin:fmt==='dropin'});
     if (error || !data?.length) { err.textContent='Nepodařilo se uložit: '+(error?.message||'neznámá chyba'); err.hidden=false; $('#fCreate').disabled=false; $('#fCreate').textContent='Rozlosovat a vytvořit'; return; }
     const {code, admin_token} = data[0];
     const tokens = store.get('turnaje.tokens', {}); tokens[code]=admin_token; store.set('turnaje.tokens', tokens);
@@ -399,7 +425,7 @@ function renderHome(){
 async function openTournament(code, key){
   const tokens = store.get('turnaje.tokens', {});
   if (key) { tokens[code]=key; store.set('turnaje.tokens', tokens); history.replaceState(null,'','?t='+code); }
-  const {data:t, error} = await sb.from('turnaj_tournaments').select('id,code,name,format,points_per_match,courts,players,created_at').eq('code', code).maybeSingle();
+  const {data:t, error} = await sb.from('turnaj_tournaments').select('id,code,name,format,points_per_match,courts,players,created_at,max_rounds,auto_draw,dropin,present').eq('code', code).maybeSingle();
   if (error || !t) {
     $('#app').innerHTML = `<div class="card stack"><h2>Turnaj ${esc(code)} nenalezen</h2><p class="muted">Zkontroluj kód v odkazu.</p><a class="btn" href="./">Zpět</a></div>`;
     return;
@@ -414,7 +440,7 @@ async function openTournament(code, key){
   state.me = store.get('turnaje.me.'+code, null);
   document.title = t.name + ' · Padel Klatovy';
   $('#barTitle').textContent = t.name;
-  $('#barSub').textContent = (t.format==='mexicano'?'Mexicano':'Americano') + ' · kód ' + t.code;
+  $('#barSub').textContent = fmtName(t.dropin?'dropin':t.format) + ' · kód ' + t.code;
   const sh = $('#barShare'); sh.hidden = false;
   sh.onclick = async () => {
     const url = playerUrl(t.code);
@@ -427,14 +453,20 @@ async function openTournament(code, key){
   render();
   subscribe();
   document.addEventListener('visibilitychange', () => { if (!document.hidden) loadMatches().then(render); });
-  setInterval(() => { if (!document.hidden && !state.live && !$('.scrim')) loadMatches().then(render); }, 20000);
+  setInterval(() => { if (!document.hidden && (!state.live || state.t.dropin) && !$('.scrim') && !isTyping()) loadMatches().then(render); }, state.t.dropin ? 12000 : 20000);
 }
 async function loadMatches(){
-  const {data} = await sb.from('turnaj_matches').select('*').eq('tournament_id', state.t.id).order('round').order('court');
+  const q = [sb.from('turnaj_matches').select('*').eq('tournament_id', state.t.id).order('round').order('court')];
+  if (state.t.dropin) q.push(sb.from('turnaj_sitouts').select('round,player').eq('tournament_id', state.t.id), reloadTournament());
+  const [{data}, so] = await Promise.all(q);
   if (data) state.matches = data;
+  if (so?.data) state.sitouts = so.data;
 }
+const fmtName = f => f==='dropin' ? 'Drop-in' : f==='mexicano' ? 'Mexicano' : 'Americano';
+const isTyping = () => document.activeElement && /INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName);
+const isPresent = i => !state.t.dropin || !state.t.present || state.t.present[i] !== false;
 async function reloadTournament(){
-  const {data} = await sb.from('turnaj_tournaments').select('id,code,name,format,points_per_match,courts,players,created_at').eq('id', state.t.id).single();
+  const {data} = await sb.from('turnaj_tournaments').select('id,code,name,format,points_per_match,courts,players,created_at,max_rounds,auto_draw,dropin,present').eq('id', state.t.id).single();
   if (data) state.t = data;
 }
 function subscribe(){
@@ -444,8 +476,15 @@ function subscribe(){
       if (payload.eventType==='UPDATE' && row?.id) {
         const i = state.matches.findIndex(m=>m.id===row.id);
         if (i>=0) state.matches[i] = row;
-        if (!$('.scrim')) render();
-      } else { loadMatches().then(() => { if (!$('.scrim')) render(); }); }
+        if (!$('.scrim') && !isTyping()) render();
+      } else {
+        const before = roundsList().length;
+        clearTimeout(state._rt); state._rt = setTimeout(() => loadMatches().then(() => {
+          const after = roundsList();
+          if (after.length > before) { toast(`Vylosováno ${after[after.length-1]}. kolo`); state.scrolledOnce = false; }
+          if (!$('.scrim') && !isTyping()) render();
+        }), 250);
+      }
     })
     .subscribe(status => { state.live = status==='SUBSCRIBED'; const l=$('#live'); if (l) l.className='live'+(state.live?' on':''); });
 }
@@ -459,17 +498,17 @@ function render(){
   const t = state.t;
   const rs = roundsList();
   const done = state.matches.filter(isDone).length, total = state.matches.length;
-  const tabs = [['zapasy','Zápasy'],['poradi','Pořadí'],['sdilet', state.admin ? 'Správa' : 'Sdílet']];
+  const tabs = [['zapasy','Zápasy'],['poradi','Pořadí'], ...(t.dropin ? [['hraci','Hráči']] : []), ['sdilet', state.admin ? 'Správa' : 'Sdílet']];
   $('#app').innerHTML = `
     <div class="row" style="justify-content:space-between;margin-bottom:10px">
-      <span class="muted" style="font-size:13.5px">${t.format==='mexicano'?'Mexicano':'Americano'} · ${t.players.length} hráčů · ${t.points_per_match?t.points_per_match+' míčů':'volné skóre'}</span>
+      <span class="muted" style="font-size:13.5px">${fmtName(t.dropin?'dropin':t.format)} · ${t.dropin ? `${t.players.filter((_,i)=>isPresent(i)).length} přítomných` : `${t.players.length} hráčů`} · ${t.points_per_match?t.points_per_match+' míčů':'volné skóre'}</span>
       <span id="live" class="live${state.live?' on':''}"><i></i>${done}/${total} zápasů</span>
     </div>
     <div class="progress" style="margin-bottom:14px"><i style="width:${total?done/total*100:0}%"></i></div>
     <nav class="tabs" role="tablist">${tabs.map(([k,l])=>`<button role="tab" data-tab="${k}" aria-selected="${state.tab===k}">${l}</button>`).join('')}</nav>
     <div id="pane"></div>`;
   document.querySelectorAll('[data-tab]').forEach(b => b.onclick = () => { state.tab=b.dataset.tab; render(); });
-  if (state.tab==='zapasy') renderMatches(rs); else if (state.tab==='poradi') renderStandings(); else renderShare();
+  if (state.tab==='zapasy') renderMatches(rs); else if (state.tab==='poradi') renderStandings(); else if (state.tab==='hraci') renderPlayers(); else renderShare();
 }
 
 function renderMatches(rs){
@@ -478,7 +517,7 @@ function renderMatches(rs){
   const html = rs.map(r => {
     const ms = state.matches.filter(m=>m.round===r);
     const inRound = new Set(ms.flatMap(m=>[m.a1,m.a2,m.b1,m.b2]));
-    const sitting = state.t.players.map((_,i)=>i).filter(i=>!inRound.has(i));
+    const sitting = state.t.dropin ? (state.sitouts||[]).filter(x=>x.round===r).map(x=>x.player) : state.t.players.map((_,i)=>i).filter(i=>!inRound.has(i));
     const d = ms.filter(isDone).length, all = d===ms.length;
     const status = all ? '<span class="st done">Dohráno</span>' : (r===cur ? '<span class="st now">Hraje se</span>' : (d ? `<span class="st">${d}/${ms.length}</span>` : ''));
     return `<section class="round${r===cur?' current':''}" id="kolo-${r}">
@@ -489,13 +528,12 @@ function renderMatches(rs){
   }).join('');
   const lastDone = rs.length && state.matches.filter(m=>m.round===last).every(isDone);
   $('#pane').innerHTML = `<div class="rounds-list">${html}
-    ${state.admin && lastDone ? `<button class="btn ball block" id="nextRound">Vylosovat ${last+1}. kolo${state.t.format==='mexicano'?' podle pořadí':''}</button>` : ''}
-    ${state.admin && !lastDone && state.t.format==='mexicano' ? `<p class="hint">Další kolo Mexicana půjde vylosovat, až bude zapsané skóre všech zápasů v ${last}. kole.</p>` : ''}
-    ${!state.admin && lastDone && state.t.format==='mexicano' ? `<p class="hint">Kolo je dohrané. Další kolo vylosuje organizátor.</p>` : ''}
+    ${footer(last, lastDone)}
   </div>
   ${rs.length>1 && cur!==rs[0] ? `<button class="jump" id="jumpCur">↓ ${cur}. kolo</button>`:''}`;
   document.querySelectorAll('[data-m]').forEach(b => b.onclick = () => openScore(b.dataset.m));
   const nx = $('#nextRound'); if (nx) nx.onclick = () => addRound(nx);
+  const ts = $('#toStand'); if (ts) ts.onclick = () => { state.tab='poradi'; render(); scrollTo({top:0}); };
   const j = $('#jumpCur');
   const goCur = (smooth) => { const el = $('#kolo-'+cur); if (el) el.scrollIntoView({block:'start', behavior: smooth?'smooth':'auto'}); };
   if (j) {
@@ -505,6 +543,23 @@ function renderMatches(rs){
     addEventListener('scroll', upd, {passive:true}); upd();
   }
   if (!state.scrolledOnce) { state.scrolledOnce = true; if (cur!==rs[0]) setTimeout(()=>goCur(false), 0); }
+}
+function footer(last, lastDone){
+  const t = state.t, mex = t.format==='mexicano';
+  const finished = lastDone && (!mex || (t.max_rounds && last >= t.max_rounds));
+  if (finished) return `<div class="card finish"><p class="eyebrow">Konec</p><h2>Turnaj je dohraný</h2><p class="muted" style="margin:.2em 0 10px">Konečné pořadí najdeš v záložce Pořadí.</p>
+    <div class="row"><button class="btn primary" id="toStand">Zobrazit pořadí</button>${state.admin ? `<button class="btn" id="nextRound">+ Přidat ${last+1}. kolo</button>` : ''}</div></div>`;
+  if (mex && t.dropin && t.players.filter((_,i)=>isPresent(i)).length < 4)
+    return `<p class="hint auto">Na další kolo jsou potřeba aspoň 4 přítomní hráči. Přidejte se v záložce Hráči.</p>`;
+  if (mex && t.auto_draw) {
+    const left = t.max_rounds ? ` (${last} z ${t.max_rounds})` : '';
+    return `<p class="hint auto">⟳ ${last+1}. kolo se vylosuje automaticky podle pořadí, jakmile bude zapsaný poslední výsledek ${last}. kola${left}.${t.dropin?' Losují se jen hráči, kteří jsou právě ve hře.':''}</p>
+      ${state.admin && lastDone ? `<button class="btn ball block" id="nextRound">Vylosovat ${last+1}. kolo</button>` : ''}`;
+  }
+  if (state.admin && lastDone) return `<button class="btn ball block" id="nextRound">Vylosovat ${last+1}. kolo${mex?' podle pořadí':''}</button>`;
+  if (mex && !lastDone) return `<p class="hint">${state.admin ? `Další kolo půjde vylosovat, až bude zapsané skóre všech zápasů v ${last}. kole.` : `Další kolo vylosuje organizátor po dohrání ${last}. kola.`}</p>`;
+  if (mex && lastDone) return `<p class="hint">Kolo je dohrané. Další kolo vylosuje organizátor.</p>`;
+  return '';
 }
 function matchCard(m){
   const d = isDone(m), wa = d && m.score_a>m.score_b, wb = d && m.score_b>m.score_a;
@@ -566,6 +621,10 @@ function openScore(id){
     const i = state.matches.findIndex(x=>x.id===m.id); state.matches[i] = data;
     toast(sa==null ? 'Skóre smazáno' : 'Uloženo');
     close();
+    if (state.t.format==='mexicano' && sa!=null) {
+      const before = roundsList().length;
+      setTimeout(() => loadMatches().then(() => { const rs = roundsList(); if (rs.length > before) { toast(`Vylosováno ${rs[rs.length-1]}. kolo`); state.scrolledOnce = false; } if (!$('.scrim') && !isTyping()) render(); }), 400);
+    }
   };
   $('[data-save]', scrim).onclick = () => {
     const sa = +ia.value, sbv = +ib.value;
@@ -577,6 +636,7 @@ function openScore(id){
 }
 
 function renderStandings(){
+  if (state.t.dropin) return renderStandingsDropin();
   const rows = Engine.standings(state.t.players.length, state.matches);
   const any = state.matches.some(isDone);
   $('#pane').innerHTML = `
@@ -589,6 +649,65 @@ function renderStandings(){
         <td class="pts num">${r.pts}</td></tr>`).join('')}</tbody>
     </table></div>
     <p class="hint">Body = součet uhraných míčů. Při shodě rozhoduje rozdíl míčů, pak počet výher.${state.t.players.length%4 ? ' Kdo měl víc pauz, má odehraných méně zápasů – sleduj sloupec Z.' : ''}</p>`;
+}
+
+function renderStandingsDropin(){
+  const rows = Engine.standings(state.t.players.length, state.matches, true);
+  const any = state.matches.some(isDone);
+  const fmt1 = v => v==null ? '–' : (Math.round(v*10)/10).toLocaleString('cs-CZ');
+  $('#pane').innerHTML = `
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>#</th><th class="name">Hráč</th><th title="Odehrané zápasy">Z</th><th title="Výhry">V</th><th title="Průměrný rozdíl míčů na zápas">Ø +/−</th><th title="Součet míčů">Σ</th><th style="padding-right:14px" title="Průměr míčů na zápas">Ø body</th></tr></thead>
+      <tbody>${rows.map((r,k)=>`<tr class="${k===0&&any?'top1':''}">
+        <td class="rank"><span>${r.mp?k+1:'–'}</span></td>
+        <td class="name">${nameHtml(r.i)}${isPresent(r.i)?'':' <span class="muted" style="font-size:12px">· odešel</span>'}</td>
+        <td>${r.mp}</td><td>${r.w}</td><td>${r.avgd>0?'+':''}${fmt1(r.avgd)}</td><td class="muted">${r.pts}</td>
+        <td class="pts num">${fmt1(r.avg)}</td></tr>`).join('')}</tbody>
+    </table></div>
+    <p class="hint">Pořadí = průměr uhraných míčů na zápas, takže kdo přišel později, není znevýhodněný. Při shodě rozhoduje průměrný rozdíl míčů, pak podíl výher. Nováček bez zápasu je na konci a začíná v nejnižší skupině. Pro vyhlášení doporučujeme podmínku aspoň 3 odehraných zápasů.</p>`;
+}
+
+function renderPlayers(){
+  const t = state.t, me = state.me;
+  const idx = t.players.map((_,i)=>i).sort((a,b)=> (isPresent(b)-isPresent(a)) || t.players[a].localeCompare(t.players[b],'cs'));
+  const here = idx.filter(isPresent).length;
+  $('#pane').innerHTML = `<div class="stack">
+    ${me!=null && t.players[me]!=null ? `<section class="card mecard">
+      <div><p class="eyebrow">Já</p><h3>${esc(t.players[me])}</h3><span class="muted" style="font-size:13.5px"><i class="dot${isPresent(me)?'':' off'}"></i>${isPresent(me)?'Hraju – budu v příštím losu':'Nehraju – v losu nebudu'}</span></div>
+      <button class="btn ${isPresent(me)?'danger':'primary'}" data-pres="${me}" data-v="${isPresent(me)?0:1}">${isPresent(me)?'Končím / pauza':'Jsem zpět'}</button>
+    </section>` : ''}
+    <section class="card stack">
+      <div><p class="eyebrow">Právě přišel?</p><h3>Přidat se do hry</h3></div>
+      <div class="linkbox"><input class="in" id="joinName" maxlength="40" placeholder="Jméno a příjmení"><button class="btn primary" id="joinBtn">Přidat</button></div>
+      <label class="row" style="gap:8px;font-size:14px;cursor:pointer"><input type="checkbox" id="joinMe" ${me==null?'checked':''} style="width:18px;height:18px;accent-color:var(--court-2)"> To jsem já (zvýraznit moje zápasy)</label>
+      <p class="hint" style="margin:0">Nový hráč nastoupí od nejbližšího losovaného kola, v nejnižší skupině. Kdo se vrací, napíše stejné jméno a pokračuje se svými body.</p>
+      <p class="err" id="joinErr" hidden></p>
+    </section>
+    <section class="card">
+      <div class="row" style="justify-content:space-between;margin-bottom:4px"><h3>Hráči</h3><span class="muted" style="font-size:13.5px">${here} hraje · ${t.players.length-here} mimo</span></div>
+      <div class="plist">${idx.map(i=>`<div class="prow${isPresent(i)?'':' off'}"><span class="nm">${nameHtml(i)}</span>
+        <button class="tog${isPresent(i)?' on':''}" data-pres="${i}" data-v="${isPresent(i)?0:1}" aria-label="${isPresent(i)?'Označit, že odešel':'Označit, že je zpět'}">${isPresent(i)?'Hraje':'Odešel'}</button></div>`).join('')}</div>
+      <p class="hint" style="margin:10px 0 0">Klepnutím přepneš stav. Změna platí pro další losované kolo – rozehraný zápas se dohraje.</p>
+    </section>
+  </div>`;
+  document.querySelectorAll('[data-pres]').forEach(b => b.onclick = async () => {
+    b.disabled = true;
+    const i = +b.dataset.pres, v = b.dataset.v==='1';
+    const {error} = await sb.rpc('turnaj_presence', {p_code:t.code, p_idx:i, p_present:v});
+    if (error) { b.disabled=false; return toast('Chyba: '+error.message); }
+    await loadMatches(); toast(v ? `${t.players[i]} je zpět ve hře` : `${t.players[i]} odchází`); render();
+  });
+  const join = async () => {
+    const name = $('#joinName').value.trim(), e = $('#joinErr'); e.hidden = true;
+    if (!name) { e.textContent='Napiš jméno.'; e.hidden=false; return; }
+    $('#joinBtn').disabled = true;
+    const {data:i, error} = await sb.rpc('turnaj_join', {p_code:t.code, p_name:name});
+    $('#joinBtn').disabled = false;
+    if (error) { e.textContent = error.message; e.hidden=false; return; }
+    if ($('#joinMe').checked) { state.me = i; store.set('turnaje.me.'+t.code, i); }
+    await loadMatches(); toast(`${name} je ve hře`); render();
+  };
+  $('#joinBtn').onclick = join; $('#joinName').onkeydown = ev => { if (ev.key==='Enter') join(); };
 }
 
 function renderShare(){
@@ -624,6 +743,11 @@ function adminPanel(){
       <p style="margin:0 0 10px">Opravdu smazat ${last}. kolo včetně zapsaného skóre?</p>
       <div class="row"><button class="btn danger" id="delYes">Ano, smazat</button><button class="btn" id="delNo">Ne</button></div>
     </div>
+    ${state.t.format==='mexicano' ? `<div class="stack" style="gap:10px;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--surface-2)">
+      <label class="row" style="gap:10px;font-weight:600;cursor:pointer"><input type="checkbox" id="autoDraw" ${state.t.auto_draw?'checked':''} style="width:20px;height:20px;accent-color:var(--court-2)"> Losovat další kolo automaticky</label>
+      <label class="f">Počet kol<small>0 = bez omezení. Po posledním kole se automatické losování zastaví.</small>
+        <div class="linkbox"><input class="in num" id="maxR" type="number" inputmode="numeric" min="0" max="99" value="${state.t.max_rounds||0}"><button class="btn" id="saveSet">Uložit</button></div></label>
+    </div>` : ''}
     <details><summary style="cursor:pointer;font-weight:600">Přejmenovat hráče</summary>
       <div class="stack" style="margin-top:10px">${state.t.players.map((p,i)=>`<div class="linkbox"><input class="in" id="rn${i}" value="${esc(p)}" maxlength="40"><button class="btn" data-rn="${i}">Uložit</button></div>`).join('')}</div>
     </details>
@@ -653,16 +777,22 @@ function bindAdmin(){
     await reloadTournament(); toast('Přejmenováno'); render();
   });
   $('#cpA').onclick = () => copy(adminUrl(state.t.code, state.admin));
+  const ss = $('#saveSet');
+  if (ss) {
+    const save = async () => {
+      const {error} = await sb.rpc('turnaj_settings', {p_code:state.t.code, p_token:state.admin, p_auto:$('#autoDraw').checked, p_max_rounds:Math.max(0, Math.min(99, +$('#maxR').value||0))});
+      if (error) return toast('Chyba: '+error.message);
+      await reloadTournament(); toast('Nastavení uloženo'); render();
+    };
+    ss.onclick = save; $('#autoDraw').onchange = save;
+  }
 }
 async function addRound(btn){
   const t = state.t, n = t.players.length, rs = roundsList(), next = (rs[rs.length-1]||0)+1;
-  let ms;
-  if (t.format==='mexicano') {
-    const order = Engine.standings(n, state.matches).map(r=>r.i);
-    ms = Engine.mexicanoRound(n, t.courts, state.matches, next, order);
-  } else ms = Engine.americanoRound(n, t.courts, state.matches, next);
   btn.disabled = true;
-  const {error} = await sb.rpc('turnaj_add_matches', {p_code:t.code, p_token:state.admin, p_matches:ms});
+  const {error} = t.format==='mexicano'
+    ? await sb.rpc('turnaj_next_round', {p_code:t.code, p_token:state.admin})
+    : await sb.rpc('turnaj_add_matches', {p_code:t.code, p_token:state.admin, p_matches:Engine.americanoRound(n, t.courts, state.matches, next)});
   btn.disabled = false;
   if (error) return toast('Chyba: '+error.message);
   await loadMatches(); state.scrolledOnce = false; state.tab='zapasy'; toast(`${next}. kolo vylosováno`); render();
